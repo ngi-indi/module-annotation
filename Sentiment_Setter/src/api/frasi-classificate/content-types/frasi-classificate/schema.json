@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "frasi_classificates",
+  "info": {
+    "singularName": "frasi-classificate",
+    "pluralName": "frasi-classificates",
+    "displayName": "frasi_classificate",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "testo_frase": {
+      "type": "text"
+    },
+    "lista_topic": {
+      "type": "enumeration",
+      "enum": [
+        "violenza",
+        "religione",
+        "politica",
+        "sesso",
+        "droga",
+        "armi"
+      ]
+    },
+    "sentiment": {
+      "type": "string"
+    },
+    "frasi_da_classificare": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::frasi-da-classificare.frasi-da-classificare",
+      "mappedBy": "frasi_classificate"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

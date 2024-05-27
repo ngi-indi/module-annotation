@@ -380,11 +380,6 @@ export interface ApiFrasiClassificateFrasiClassificate
       ['violenza', 'religione', 'politica', 'sesso', 'droga', 'armi']
     >;
     sentiment: Attribute.String;
-    frasi_da_classificare: Attribute.Relation<
-      'api::frasi-classificate.frasi-classificate',
-      'oneToOne',
-      'api::frasi-da-classificare.frasi-da-classificare'
-    >;
     users_permissions_user: Attribute.Relation<
       'api::frasi-classificate.frasi-classificate',
       'oneToOne',
@@ -426,10 +421,8 @@ export interface ApiFrasiDaClassificareFrasiDaClassificare
     >;
     testo_frase: Attribute.Text;
     flag_classificazione: Attribute.Boolean;
-    frasi_classificate: Attribute.Relation<
-      'api::frasi-da-classificare.frasi-da-classificare',
-      'oneToOne',
-      'api::frasi-classificate.frasi-classificate'
+    sentiment: Attribute.Enumeration<
+      ['null', 'neutral', 'positive', 'negative']
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

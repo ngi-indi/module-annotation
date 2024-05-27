@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Col, Row, Button, FormGroup, Input } from "reactstrap";
+import Navbarcustom from "../navbar";
 
 const initialUser = { email: "", password: "", username: "" };
 const Registration = () => {
@@ -33,7 +35,12 @@ const Registration = () => {
   };
 
   return (
-    <Row className="register">
+    <div>
+      <div>
+        <Navbarcustom />
+      </div>
+    <div class="content" >
+    <Row className="register" >
       <Col sm="12" md={{ size: 4, offset: 4 }}>
         <div>
           <h2>Sign up:</h2>
@@ -70,6 +77,8 @@ const Registration = () => {
         </div>
       </Col>
     </Row>
+    </div>
+    </div>
   );
 };
 

@@ -29,11 +29,14 @@
     "flag_classificazione": {
       "type": "boolean"
     },
-    "frasi_classificate": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::frasi-classificate.frasi-classificate",
-      "inversedBy": "frasi_da_classificare"
+    "sentiment": {
+      "type": "enumeration",
+      "enum": [
+        "null",
+        "neutral",
+        "positive",
+        "negative"
+      ]
     }
   }
 }

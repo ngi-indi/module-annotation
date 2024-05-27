@@ -29,12 +29,6 @@
     "sentiment": {
       "type": "string"
     },
-    "frasi_da_classificare": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::frasi-da-classificare.frasi-da-classificare",
-      "mappedBy": "frasi_classificate"
-    },
     "users_permissions_user": {
       "type": "relation",
       "relation": "oneToOne",

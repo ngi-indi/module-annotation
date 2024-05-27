@@ -1,26 +1,51 @@
 import React from "react";
-//import CustomNav from "../CustomNav";<CustomNav />
 import { userData } from "../../helpers";//{username}
 import { Link, useNavigate } from "react-router-dom";
 import BasicExample   from "../navbar";
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Navbarcustom from "../navbar";
+import JsonData from "../data/data.json";
+import { useState, useEffect } from "react";
 
 
 const LandingPage = () => {
+    const [landingPageData, setLandingPageData] = useState({});
+    useEffect(() => {
+      setLandingPageData(JsonData);
+    }, []);
+    const props = { data: landingPageData };
     const { username } = userData();
     const navigate = useNavigate();
- 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("submitted");
+      }
+    const handleChange = (e) => {
+        console.log(e.target.value);
+    }
 
     return (
-        <div className="landing">
-            <Navbarcustom/>
-            <div class="d-flex flex-column">
-                <h2>Welcome in our site!</h2>
-                <h3>You can create an account and start working or read our story</h3>
-               <p></p>
+        <div class="landing" >
+            <div>
+            <Navbarcustom />
             </div>
-        </div>
+            <header id="header">
+                <div className="intro">
+                    <div className="overlay">
+                        <Row>
+                            <div className=" intro-text">
+                                <h1>sentiment analiysis
+                                    <span></span>
+                                </h1>
+                                <p>kkdkkpk kpkpkpk kpkpkpkdpp ppp</p>
+                            </div>
+                        </Row>
+                    </div>
+            </div>
+        </header>
+    </div>   
+
+
         
     );
 

@@ -16,22 +16,26 @@ const AuthProvider = ({ children }) => {
     initialUser.password = data1.password;
     try {
       const { data } = await axios.post(url, initialUser);
-        
+      console.log("data ", data); 
       //const res = await response.json();
       if (data.jwt) {
-        storeUser(data)
-        
+        //role.data.role.type
+        const role=await axios.get(`http://localhost:1337/api/users/me?populate=role`, {
+          headers: {
+            Authorization: `Bearer ${data.jwt}`
+          }
+        });
+        console.log("role",role.data.role.type);
+        storeUser(data,role);
         setUser(JSON.stringify({
           username: data.user.username,
           jwt: data.jwt,
           id: data.user.id,
-          email: data.user.email
+          email: data.user.email,
+          role: role.data.role.type
         }));
-        /*
-        setToken(data.jwt);
-        localStorage.setItem("site", data.jwt);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        */
+
+      
         navigate("/dashboard");
         return;
       }
@@ -40,16 +44,18 @@ const AuthProvider = ({ children }) => {
       console.error(err);
     }
   };
-  const storeUser = (data) => {
+  const storeUser = (data,role) => {
     localStorage.setItem(
       "user",
       JSON.stringify({
         username: data.user.username,
         jwt: data.jwt,
         id: data.user.id,
-        email: data.user.email
+        email: data.user.email,
+        role: role.data.role.type
       })
     );
+    console.log("local user", localStorage.getItem("user"));
   };
   const logOut = () => {
     setUser(null);

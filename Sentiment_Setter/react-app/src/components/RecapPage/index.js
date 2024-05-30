@@ -55,24 +55,25 @@ const RecapPage = () => {
     navigate("/dashboard");
   };
   console.log("preferenze", preferenze);
-    const Riepilogo = preferenze.map((pref)=>{
-      console.log("id",pref.id);
-      return (
-        <tr key={pref.id}>
-          <td>{pref.attributes.testo_frase}</td>
-          <td>
-            <Select className="dropdown" 
-            options={options}
-            value={options.find(option => option.value === pref.attributes.sentiment)}
-            onChange={(option) => handleChange(pref.id, option)}
-            />
-          </td>
-          <td>
-            <CloseButton onClick={handleCancel(pref.id)}/>
-          </td>
-        </tr>
-      )
-    });
+  
+  const Riepilogo = preferenze.map((pref)=>{
+    console.log("id",pref.id);
+    return (
+      <tr key={pref.id}>
+        <td>{pref.attributes.testo_frase}</td>
+        <td>
+          <Select className="dropdown" 
+          options={options}
+          value={options.find(option => option.value === pref.attributes.sentiment)}
+          onChange={(option) => handleChange(pref.id, option)}
+          />
+        </td>
+        <td>
+          <CloseButton onClick={handleCancel(pref.id)}/>
+        </td>
+      </tr>
+    )
+  });
     return (
       <div>
         <Navbarcustom />

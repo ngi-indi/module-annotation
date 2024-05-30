@@ -72,22 +72,12 @@ export default DashboardPage;
 const DashboardPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  
   const auth = useAuth();
-
-  const user =JSON.parse(auth.user) ;
+  console.log("auth",auth);
+  const user =JSON.parse(auth.user || '{}') ;
 
   console.log("user",typeof user,user);
-  //console.log("token",typeof auth.token);
-  
-  try {
-    //const userjson = JSON.parse(user)
-    console.log("username",(user.username));
-    //console.log("userjson",typeof userjson.username)
-    //console.log("user plain",user.username)
-  }
-  catch (e) {
-    console.log("error",e);
-  }
   
   const handleAnnotationPage = () => {//cambiare nome della funzione
   
@@ -97,11 +87,25 @@ const DashboardPage = () => {
   
     navigate("/Frasi_Classificate");
   };
+  const handleAdminPage = () => {//cambiare nome della funzione
+    navigate("/admin");
+  };
+  const AdminRole = () => {
+    if (user.role === "admin") {
+      return(
+        <Button onClick={handleAdminPage} variant="primary" class="mt-2">
+          View admin page
+        </Button>
+      );
+    }
+  
+  };
 
   return (
     <div className="dashboard">
       <Navbarcustom />
-      <div class="d-flex flex-column content">
+      <div className="content" >
+        <div class="m-5 d-block">
         <h2>Welcome {user?.username}</h2>
         <p>What do you want to do?</p>
         <Container>
@@ -110,12 +114,16 @@ const DashboardPage = () => {
               <Button onClick={handleAnnotationPage} variant="primary" class="mt-2">
                 View frasi da classificare
               </Button>
+              
               <Button onClick={handleFrasi_classificate} variant="primary" class="mt-2">
                 View frasi che hai già classificato
               </Button>
+
+              <AdminRole/>
             </Col>
           </Row>
         </Container>
+        </div>
       </div>
     </div>
     

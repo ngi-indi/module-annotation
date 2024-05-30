@@ -1,12 +1,10 @@
 import React from "react";
-import { userData } from "../../helpers";//{username}
-import { Link, useNavigate } from "react-router-dom";
-import BasicExample   from "../navbar";
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 import Navbarcustom from "../navbar";
 import JsonData from "../data/data.json";
 import { useState, useEffect } from "react";
-
+import img from "D:/roba_da_backup/1_UNICA/2_Magistrale/Reading_course2/Sentiment_Setter/react-app/src/img/about.jpg";
+//import about from "../img/about.jpg";
 
 const LandingPage = () => {
     const [landingPageData, setLandingPageData] = useState({});
@@ -14,7 +12,9 @@ const LandingPage = () => {
       setLandingPageData(JsonData);
     }, []);
     const props = { data: landingPageData };
-    const { username } = userData();
+    
+    //const { username } = userData();
+
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,29 +24,35 @@ const LandingPage = () => {
         console.log(e.target.value);
     }
 
+    const Services = () => {
+
+
+    };
+
     return (
-        <div class="landing" >
-            <div>
+        <div className="landing " >
+            <>
             <Navbarcustom />
-            </div>
+            </>
             <header id="header">
-                <div className="intro">
+                <div className="intro" >
                     <div className="overlay">
-                        <Row>
+                    <div class="row">
                             <div className=" intro-text">
                                 <h1>sentiment analiysis
                                     <span></span>
                                 </h1>
-                                <p>kkdkkpk kpkpkpk kpkpkpkdpp ppp</p>
+                                <p></p>
                             </div>
-                        </Row>
+                            </div>
                     </div>
+                </div>
+            </header>
+            <div>
+                
+                
             </div>
-        </header>
-    </div>   
-
-
-        
+        </div>   
     );
 
 };

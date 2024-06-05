@@ -18,12 +18,15 @@
     "lista_topic": {
       "type": "enumeration",
       "enum": [
-        "violenza",
-        "religione",
-        "politica",
-        "sesso",
-        "droga",
-        "armi"
+        "Linguistic bias",
+        "Text-level Context Bias",
+        "Reporting-Level Context Bias",
+        "Cognitive Bias",
+        "Hate Speech",
+        "Racial bias",
+        "Fake news",
+        "Gender Bias",
+        "Political bias"
       ]
     },
     "sentiment": {

@@ -12,6 +12,7 @@ import LandingPage from './components/LandingPage';
 import UserProfilePage from './components/UserProfilePage';
 import RecapPage from './components/RecapPage';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import AdminAnnotationPage from './components/AdminAnnotationPage';
 //import Logout from "./components/Logout";
 import { ToastContainer } from "react-toastify";
 import  Protector  from "./components/Protector/Protector";
@@ -36,6 +37,7 @@ function App() {
             <Route path="/dashboard" element={<Protector component={DashboardPage}/>} />
             <Route path="/admin" element={<Protector component={AdminDashboard}/>} />
             <Route path="/registration" element={<Registration />} />
+            <Route path="/annotation-admin" element={<ClassificationProvider ><Protector component={AdminAnnotationPage}/></ClassificationProvider>} />
             <Route path="/annotation" element={<ClassificationProvider ><Protector component={AnnotationPage }/></ClassificationProvider>} />
             <Route path="/recap" element={<ClassificationProvider><Protector component={RecapPage }/></ClassificationProvider>} />
             <Route path="/Frasi_Classificate" element={<Protector component={Frasi_Classificate }/>} />

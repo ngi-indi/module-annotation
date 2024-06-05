@@ -12,31 +12,39 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "lista_topic": {
+    "lista_bias": {
       "type": "enumeration",
       "enum": [
-        "violenza",
-        "religione",
-        "politica",
-        "sesso",
-        "droga",
-        "armi"
+        "Linguistic bias",
+        "Text-level Context Bias",
+        "Reporting-Level Context Bias",
+        "Cognitive Bias",
+        "Hate Speech",
+        "Racial bias",
+        "Fake news",
+        "Gender Bias",
+        "Political bias"
       ]
     },
     "testo_frase": {
       "type": "text"
     },
+    "flag_test": {
+      "type": "boolean"
+    },
     "flag_classificazione": {
       "type": "boolean"
     },
-    "sentiment": {
-      "type": "enumeration",
-      "enum": [
-        "null",
-        "neutral",
-        "positive",
-        "negative"
-      ]
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user"
+    },
+    "flag_bias": {
+      "type": "boolean"
+    },
+    "user_result": {
+      "type": "json"
     }
   }
 }

@@ -1,0 +1,78 @@
+import React, { useEffect,useState,useContext } from "react";
+import { useAuth } from "../../context/AuthProvider";
+import { Link, useNavigate,useLocation } from "react-router-dom";
+import Navbarcustom   from "../navbar";
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import axios from "axios";
+import { Card } from "reactstrap";
+import { CloseButton } from "react-bootstrap";
+import Select from 'react-select'
+
+const Riepilogo=(users)=>{
+    const [expandedRows, setExpandedRows] = useState({});
+
+    const toggleCollapse = (userId) => {
+        setExpandedRows(prevState => ({
+        ...prevState,
+        [userId]: !prevState[userId]
+        }));
+    };
+
+    const Tables = users.filter(function (user) {
+        return user.role.type != "admin";
+    }).map((user)=>{
+        
+        return (
+            <>
+            <table className="table">
+                <thead>
+                    <tr>
+                    <th scope="col">testo</th>
+                    <th scope="col">sentiment</th>
+                    <th scope="col">cancella</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr key={user.id} onClick={() => toggleCollapse(user.id)} style={{ cursor: 'pointer' }}>
+                        <td>{user.username}</td>
+                        <td>{user.role.type}</td>
+                        <td > frasi</td>
+                    </tr>
+
+                    {expandedRows[user.id]  && (
+                        <tr>
+                            <td colSpan="3">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                        <th>Sentence</th>
+                                        <th>Classification</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {user.frasi_classificates.map((sentence) => (
+                                        <tr key={sentence.id} >
+                                            <td>{sentence.testo_frase}</td>
+                                            <td>{sentence.sentiment}</td>
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            </>
+        )
+    });
+    return( 
+    
+    <Tables/>
+
+    );
+};
+
+export default Riepilogo;
+
+    

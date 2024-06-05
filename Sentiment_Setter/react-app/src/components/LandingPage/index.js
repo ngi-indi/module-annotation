@@ -39,7 +39,7 @@ const LandingPage = () => {
                     <div className="overlay">
                     <div class="row">
                             <div className=" intro-text">
-                                <h1>sentiment analiysis
+                                <h1>SENTIMENT ANALYSIS
                                     <span></span>
                                 </h1>
                                 <p></p>

@@ -61,10 +61,15 @@ const AdminDashboard=()=>{
         
         return (
             <>
-            <tr key={user.id} onClick={() => toggleCollapse(user.id)} style={{ cursor: 'pointer' }}>
+            <tr key={user.id} >
                 <td>{user.username}</td>
                 <td>{user.role.type}</td>
-                <td > frasi</td>
+                <td
+              onClick={() => toggleCollapse(user.id)}
+              style={{ cursor: 'pointer' }}
+            >
+              {expandedRows[user.id] ? '-' : '+'}
+            </td>
             </tr>
 
             {expandedRows[user.id]  && (
@@ -78,12 +83,15 @@ const AdminDashboard=()=>{
                                 </tr>
                             </thead>
                             <tbody>
-                                {user.frasi_classificates.map((sentence) => (
+                                {user.frasi_classificates?user.frasi_classificates.map((sentence) => (
                                 <tr key={sentence.id} >
                                     <td>{sentence.testo_frase}</td>
-                                    <td>{sentence.sentiment}</td>
+                                    <td>{sentence.lista_bias}</td>
                                 </tr>
-                                ))}
+                                )):<tr >
+                                <td>testo</td>
+                                <td>bias</td>
+                            </tr>}
                             </tbody>
                         </table>
                     </td>
@@ -106,9 +114,9 @@ const AdminDashboard=()=>{
                         <table className="table">
                         <thead>
                             <tr>
-                            <th scope="col">testo</th>
-                            <th scope="col">sentiment</th>
-                            <th scope="col">cancella</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Role</th>
+                            <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>

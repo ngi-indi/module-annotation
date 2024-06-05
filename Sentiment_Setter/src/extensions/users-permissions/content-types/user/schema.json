@@ -65,10 +65,13 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "frasi_classificates": {
+    "frasi_da_classificares": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::frasi-classificate.frasi-classificate"
+      "target": "api::frasi-da-classificare.frasi-da-classificare"
+    },
+    "lista_bias": {
+      "type": "json"
     }
   }
 }

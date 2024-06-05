@@ -43,8 +43,8 @@ const Navbarcustom = () => {
 
   
 
-  console.log('visibleLinks',visibleLinks);
-  console.log('location.pathname',location.pathname);
+  //console.log('visibleLinks',visibleLinks);
+  //console.log('location.pathname',location.pathname);
     return (
         <Navbar bg="primary" variant="dark" expand="lg" fixed="top" >
         <Container class="container-fluid">

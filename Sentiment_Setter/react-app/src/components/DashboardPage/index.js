@@ -80,8 +80,12 @@ const DashboardPage = () => {
   console.log("user",typeof user,user);
   
   const handleAnnotationPage = () => {//cambiare nome della funzione
-  
+    if (user.role === "admin") {
+      navigate("/annotation-admin");
+    }
+    else{
     navigate("/annotation");
+    }
   };
   const handleFrasi_classificate= () => {//messa per provare la get
   
@@ -115,10 +119,11 @@ const DashboardPage = () => {
                 View frasi da classificare
               </Button>
               
+              {/* 
               <Button onClick={handleFrasi_classificate} variant="primary" class="mt-2">
                 View frasi che hai già classificato
               </Button>
-
+              */}
               <AdminRole/>
             </Col>
           </Row>

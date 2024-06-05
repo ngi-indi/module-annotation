@@ -377,7 +377,17 @@ export interface ApiFrasiClassificateFrasiClassificate
   attributes: {
     testo_frase: Attribute.Text;
     lista_topic: Attribute.Enumeration<
-      ['violenza', 'religione', 'politica', 'sesso', 'droga', 'armi']
+      [
+        'Linguistic bias',
+        'Text-level Context Bias',
+        'Reporting-Level Context Bias',
+        'Cognitive Bias',
+        'Hate Speech',
+        'Racial bias',
+        'Fake news',
+        'Gender Bias',
+        'Political bias'
+      ]
     >;
     sentiment: Attribute.String;
     users_permissions_user: Attribute.Relation<
@@ -416,14 +426,29 @@ export interface ApiFrasiDaClassificareFrasiDaClassificare
     draftAndPublish: true;
   };
   attributes: {
-    lista_topic: Attribute.Enumeration<
-      ['violenza', 'religione', 'politica', 'sesso', 'droga', 'armi']
+    lista_bias: Attribute.Enumeration<
+      [
+        'Linguistic bias',
+        'Text-level Context Bias',
+        'Reporting-Level Context Bias',
+        'Cognitive Bias',
+        'Hate Speech',
+        'Racial bias',
+        'Fake news',
+        'Gender Bias',
+        'Political bias'
+      ]
     >;
     testo_frase: Attribute.Text;
+    flag_test: Attribute.Boolean;
     flag_classificazione: Attribute.Boolean;
-    sentiment: Attribute.Enumeration<
-      ['null', 'neutral', 'positive', 'negative']
+    users: Attribute.Relation<
+      'api::frasi-da-classificare.frasi-da-classificare',
+      'oneToMany',
+      'plugin::users-permissions.user'
     >;
+    flag_bias: Attribute.Boolean;
+    user_result: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -850,11 +875,12 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    frasi_classificates: Attribute.Relation<
+    frasi_da_classificares: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
-      'api::frasi-classificate.frasi-classificate'
+      'api::frasi-da-classificare.frasi-da-classificare'
     >;
+    lista_bias: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

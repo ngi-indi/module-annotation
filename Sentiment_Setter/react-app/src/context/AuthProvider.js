@@ -16,24 +16,35 @@ const AuthProvider = ({ children }) => {
     initialUser.password = data1.password;
     try {
       const { data } = await axios.post(url, initialUser);
-      console.log("data ", data); 
+      //console.log("data ", data); 
       //const res = await response.json();
       if (data.jwt) {
         //role.data.role.type
-        const role=await axios.get(`http://localhost:1337/api/users/me?populate=role`, {
+        const data2=await axios.get(`http://localhost:1337/api/users/me`, {
           headers: {
             Authorization: `Bearer ${data.jwt}`
+          },
+          params:{
+            populate: ["role"]
           }
         });
-        console.log("role",role.data.role.type);
-        storeUser(data,role);
-        setUser(JSON.stringify({
-          username: data.user.username,
-          jwt: data.jwt,
-          id: data.user.id,
-          email: data.user.email,
-          role: role.data.role.type
-        }));
+        console.log("res",data2);
+        
+        //console.log("role",role.data.role.type);
+        //console.log("lista_bias",role.data.lista_bias);
+        
+        const user = {  
+                        username: data2.data.username,
+                        jwt: data.jwt,
+                        id: data2.data.id,
+                        email: data2.data.email,
+                        role: data2.data.role.type,
+                        lista_bias: data2.data.lista_bias
+                      };
+
+        storeUser(user);
+        
+        setUser(JSON.stringify(user));
 
       
         navigate("/dashboard");
@@ -44,19 +55,15 @@ const AuthProvider = ({ children }) => {
       console.error(err);
     }
   };
-  const storeUser = (data,role) => {
+
+  const storeUser = (user) => {
     localStorage.setItem(
       "user",
-      JSON.stringify({
-        username: data.user.username,
-        jwt: data.jwt,
-        id: data.user.id,
-        email: data.user.email,
-        role: role.data.role.type
-      })
+      JSON.stringify( user )
     );
     console.log("local user", localStorage.getItem("user"));
   };
+
   const logOut = () => {
     setUser(null);
     //setToken("");

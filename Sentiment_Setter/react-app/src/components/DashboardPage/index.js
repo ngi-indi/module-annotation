@@ -2,72 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { Link, useNavigate,useLocation } from "react-router-dom";
 import Navbarcustom   from "../navbar";
-import { Container, Row, Col, Button } from 'react-bootstrap';
-
-{/* 
-import React, { useContext, useState,useEffect } from "react";
-
-//import CustomNav from "../CustomNav";<CustomNav />
-//import { userData } from "../../helpers";//{username}
-import { Link, useNavigate,useLocation } from "react-router-dom";
-import Navbarcustom   from "../navbar";
-import { Container, Row, Col, Button } from 'react-bootstrap';
-
-import { UserContext } from "../../context/UserContext";
-
-
-
-const DashboardPage = () => {
-
-  const { user, setUser } = useContext(UserContext)
-
-  useEffect(() => {
-    console.log("Dashboard user:", user);  // Debugging line to check user
-  }, [user]);
-
-  console.log(user);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  //console.log(location.pathname);
-
-  const handleAnnotationPage = () => {//cambiare nome della funzione
-  
-    navigate("/annotation");
-  };
-  const handleFrasi_classificate= () => {//messa per provare la get
-  
-    navigate("/Frasi_Classificate");
-  };
-
-  return (
-    <div className="dashboard">
-      <Navbarcustom />
-      <div class="d-flex flex-column content">
-        <h2>Welcome {user?.username}</h2>
-        <p>What do you want to do?</p>
-        <Container>
-          <Row className="mt-3">
-            <Col className="d-flex justify-content-around">
-              <Button onClick={handleAnnotationPage} variant="primary" class="mt-2">
-                View frasi da classificare
-              </Button>
-              <Button onClick={handleFrasi_classificate} variant="primary" class="mt-2">
-                View frasi che hai già classificato
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    </div>
-    
-  );
-
-};
-
-export default DashboardPage;
-
-*/}
+import { Container, Row, Col, Button,Card,Badge  } from 'react-bootstrap';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -109,25 +44,27 @@ const DashboardPage = () => {
     <div className="dashboard">
       <Navbarcustom />
       <div className="content" >
+        
         <div class="m-5 d-block">
-        <h2>Welcome {user?.username}</h2>
-        <p>What do you want to do?</p>
-        <Container>
-          <Row className="mt-3">
+        <Card style={{ justifyContent:'center',}}>
+          <Card.Header >
+              <h2>
+                Welcome {user?.username} 
+                <Badge pill style={{fontSize:'0.5em',verticalAlign:'middle',padding:'0.2em 0.4em ',marginLeft:'0.8em'}}>
+                  {user?.role}
+                </Badge>
+              </h2>
+          </Card.Header>
+          <Card.Body>
+            <h4>Sentence Annotated : insert number of sentences Annotated by the user</h4>
+            
             <Col className="d-flex justify-content-around">
-              <Button onClick={handleAnnotationPage} variant="primary" class="mt-2">
-                View frasi da classificare
-              </Button>
-              
-              {/* 
-              <Button onClick={handleFrasi_classificate} variant="primary" class="mt-2">
-                View frasi che hai già classificato
-              </Button>
-              */}
-              <AdminRole/>
+            <Button onClick={handleAnnotationPage}>Annotation</Button>
+            <AdminRole/>
             </Col>
-          </Row>
-        </Container>
+          </Card.Body>
+        </Card>
+       
         </div>
       </div>
     </div>

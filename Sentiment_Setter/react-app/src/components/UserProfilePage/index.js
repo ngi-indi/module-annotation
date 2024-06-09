@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Col, Row, Button, Input, Nav, Container } from "reactstrap";
-import { Form } from "react-bootstrap";
+import { Col, Row,Button, Input, Nav, Container } from "reactstrap";
+import { Alert,Toast, Form } from "react-bootstrap";
 //import { userData } from "../../helpers";
 import { useAuth,storeUser } from "../../context/AuthProvider";
 import Navbarcustom from "../navbar";
 import axios from "axios";
+import { waitFor } from "@testing-library/react";
+import { propTypes } from "react-bootstrap/esm/Image";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -17,6 +21,10 @@ import axios from "axios";
       username: "",
       id:"",
       "lista_bias":"" });
+    
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [type, setType] = useState("success");
+    const [message, setMessage] = useState("");
     
     const handleInputChange = (e) => {
       console.log(e.target);
@@ -71,6 +79,16 @@ import axios from "axios";
             
           },
         });
+        if(response.status===200){
+          toast.success("Profile updated successfully!", {
+            position: "top-center"
+          });
+        }else{
+          toast.error("An error occurred while updating the profile!", {
+            position: "top-center"
+          });
+        }
+        
         console.log("response",response);
       }
 
@@ -81,12 +99,12 @@ import axios from "axios";
         const input = changedUser.lista_bias; 
 
         const elementsArray = input.split(';').map(element => element.trim());
-        //console.log("elementsArray",elementsArray);
+        
         const elementsArrayJson = JSON.stringify(elementsArray.filter(element => element !== ""));
-        
-        
+      
       }
     }
+
     const TextForForm=(text)=>{
       let text2=text.replace(/"/g, '');
       text2=text2.replace('[','');
@@ -94,17 +112,19 @@ import axios from "axios";
       text2=text2.replace(/,/g, ';');
       return text2;
     };
-
+    
     return (
       <div>
+        <ToastContainer />
         <Navbarcustom />
         <Row className="profile">
           <Col sm="12" md={{ size: 4, offset: 4 }}>
             <div className="card content">
+            
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <h2>I tuoi dati:</h2>
-                <Form>
-
+                <Form >
+                  
                   <Form.Group className="mb-3" controlId="username" >
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="string" defaultValue={username} onChange={handleInputChange} name="username"/>
@@ -139,7 +159,8 @@ import axios from "axios";
                 </div>
             
             <Row>
-            <Button onClick={handleUserChange} variant="primary" className="mt-2" >
+            
+            <Button onClick={handleUserChange} variant="primary" className="mt-2" type="submit">
               Salva
             </Button>
             </Row>

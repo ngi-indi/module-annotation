@@ -14,6 +14,9 @@ import { useClassification } from "../../context/ClassificationProvider";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const AnnotationPage = () => {
 
   const [frasi, setFrasi] = useState([]); // To handle frasi state
@@ -22,6 +25,7 @@ const AnnotationPage = () => {
   const [error, setError] = useState(null); // To handle error state
   const [infoHover, setInfoHover] = useState(false); // To handle hover info bias
   const[flagBatch,setFlagBatch]=useState(true);
+  const [showtable, setShowtable] = useState(true);
 
   //const [preferenze, setPreferenze] = useState([]);
 
@@ -134,12 +138,26 @@ function shuffleArray(array) {
 
   const handleNext = () => {
     console.log("frasi",batchFrasi.length,batchFrasi);
-    if (currentIndex === batchFrasi.length-1) {
-      console.log("Non ci sono frasi successive");
-      //aggiungere un alert
+    if(!batchFrasi[currentIndex].some((element) => element.flag_bias === null)){
+      if (currentIndex === batchFrasi.length-1) {
+        console.log("Non ci sono frasi successive");
+        toast.success("You have annotated all the sentences!",{
+          position: "top-center"});
+          setShowtable(false);
+      }
+      else{
+        toast.success("You have saved the annotations! you can annotate these now.",{
+          position: "top-center"});
+        setCurrentIndex((prevIndex) => (prevIndex + 1));
+        
+      }
     }
     else{
-      setCurrentIndex((prevIndex) => (prevIndex + 1));
+      console.log("Devi completare tutte le frasi");
+      toast.error("you have to complete all the sentences",{
+        position: "top-center"});
+    
+
     }
   };
   //----- Change
@@ -207,6 +225,7 @@ const handleCancel = async () => {
 //-----------------------------Return Principale----------------------------------
   return(<div>
     <div>
+    <ToastContainer />
     <Navbarcustom/>
     </div>
     <div class="content ">
@@ -214,7 +233,9 @@ const handleCancel = async () => {
     <div class="card m-5 d-block">
       <h5 class="card-header">Pagina n° {currentIndex +1}</h5>
       <div class="card-body">
-          <Table striped bordered hover>
+        {!showtable && (<h3 style={{alignItems:'center'}}>There are no new sentences to annotate. Wait or change your Keywords.</h3>)}
+        {showtable && (
+          <Table striped bordered hover >
             <thead>
               <tr>
               <th scope="col">#</th>
@@ -242,6 +263,7 @@ const handleCancel = async () => {
               {VisualizzaFrasi}
             </tbody>
           </Table>
+          )}
 
           
         
@@ -249,11 +271,11 @@ const handleCancel = async () => {
     </div>
       <Col className="d-flex justify-content-around">
         <Button onClick={handleCancel} variant="secondary" class="mt-2">
-          Cancella e torna indietro
+          Back to Dashboard
         </Button>
 
         <Button onClick={handleNext} variant="primary" class="mt-2">
-          Salva e passa alla prossima
+          Save 
         </Button>
       </Col>
     </div>

@@ -881,6 +881,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::frasi-da-classificare.frasi-da-classificare'
     >;
     lista_bias: Attribute.JSON;
+    rating: Attribute.Float;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

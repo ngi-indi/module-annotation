@@ -125,3 +125,12 @@ header .intro-text {
 }
 
 /**/
+.rag-red {
+  background-color: #f0111144;
+}
+.rag-green {
+  background-color: #1ddc1044;
+}
+.rag-yellow{
+  background-color: rgba(255, 148, 17, 0.719);
+}

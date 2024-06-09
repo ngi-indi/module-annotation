@@ -72,6 +72,9 @@
     },
     "lista_bias": {
       "type": "json"
+    },
+    "rating": {
+      "type": "float"
     }
   }
 }

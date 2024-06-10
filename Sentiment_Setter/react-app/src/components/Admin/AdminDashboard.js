@@ -1,4 +1,4 @@
-import React, { useEffect,useState,useContext } from "react";
+import React, { useEffect,useState,useContext,useMemo } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { Link, useNavigate,useLocation } from "react-router-dom";
 import Navbarcustom   from "../navbar";
@@ -12,6 +12,15 @@ import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 
+
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Rating } from 'primereact/rating';
+import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
+import { ToastContainer, toast } from 'react-toastify';
+
+
 const AdminDashboard=()=>{
     const auth = useAuth();
     const navigate = useNavigate();
@@ -19,35 +28,18 @@ const AdminDashboard=()=>{
     const [loading, setLoading] = useState(true); // To handle loading state    useContext(SentimentContext);
     const [error, setError] = useState(null);
     const [users, setUsers] = useState([]);
-    const [expandedRows, setExpandedRows] = useState({});
+    const [expandedRows, setExpandedRows] = useState(null);
     const [rowData, setRowData] = useState([]);
+    const [selectedValues, setSelectedValues] = useState({});
 
-    const toggleCollapse = (userId) => {
-        setExpandedRows(prevState => ({
-        ...prevState,
-        [userId]: !prevState[userId]
-        }));
-    };
+    const ruoli = [
+        { value: 'admin', label: 'Admin' },
+        { value: 'authenticated', label: 'Authenticated'},
+        { value : 'public', label: 'Public'}
+    ];   
 
     const user =JSON.parse(auth.user || '{}') 
 
-    const [colDefs] = useState([
-        { label:"Username",field: "username" },
-        { label:"Sentences annotated", field: "frasi_classificates" },
-        { label:"Keywords", field: "keywords" },
-        { label:"Rating", field: "rating" ,cellClassRules: {
-            // apply green to 2008
-            'rag-green': params => params.value > 10,
-            // apply blue to 2004
-            'rag-yellow': params => params.value >5 && params.value <= 10,
-            // apply red to 2000
-            'rag-red': params => params.value < 5,
-        } },
-        { label:"Role", field: "role",editable: true,
-        cellEditor: 'agSelectCellEditor',cellEditorParams: {values: ['authenticated', 'public']} },
-    ]);
-    const ratingRenderer = (params) => {
-    };
     const UsersData = async () => {
         try {
         const data = await axios.get('http://localhost:1337/api/users?populate=*', {
@@ -58,11 +50,12 @@ const AdminDashboard=()=>{
         setUsers(data.data);
         const formattedData = data.data.map((user) => {
             return {
-                username: user.username,
-                role: user.role.type,
-                rating: user.rating,
-                frasi_classificates: user.frasi_classificates,
-                keywords: user.lista_bias
+                'id': user.id,
+                'username': user.username,
+                'role': user.role.type,
+                'rating': user.rating,
+                'frasi_da_classificares': user.frasi_da_classificares,
+                'keywords': (user.lista_bias===null?"No keywords":String(user.lista_bias).split(',').join(', ')),
             };
         });
 
@@ -85,38 +78,92 @@ const AdminDashboard=()=>{
         UsersData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading data</div>;
-    const defaultColDef = {
-        sortable: true,
-        filter: true,
-        flex: 1,
-        minWidth: 100,
-        resizable: true,
-      };
-    const AdminGrid = ()=>{
-        return(
-            <div className="ag-theme-quartz" style={{ height: 400, width: '100%' }}>
-            <AgGridReact
-            columnDefs={colDefs}
-            rowData={rowData}
-            defaultColDef={defaultColDef}
-            pagination={true}
-            singleClickEdit={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10,20,50,100]}
-            domLayout='autoHeight'
-            rowSelection='single'
-            onRowClicked={(row) => {
-                console.log(row.data);
-            }}
-        />
-        </div>
-        );
-
-    };
-        
     
+const onRowExpand = (event) => {
+    //toast.current.show({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
+};
+
+const onRowCollapse = (event) => {
+    //toast.current.show({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
+};
+
+const allowExpansion = (data) => {
+    return data.frasi_da_classificares.length > 0;
+};
+
+const rowExpansionTemplate = (data) => {
+
+    
+    return(
+        <DataTable value={data.frasi_da_classificares}   dataKey="id"  stripedRows showGridlines
+        tableStyle={{minWidth:'60rem'}}>
+            <Column field="testo_frase" header="Sentence" sortable ></Column>
+            <Column field="lista_bias" header="Classification" sortable ></Column>
+            <Column field="" header="User Answer" sortable ></Column>
+        </DataTable>
+    );
+};
+//<div className={stockClassName}>{rowData.quantity}</div>;
+    const Ratingstyle = (rowData) => {
+        if (rowData.rating>10) {
+            return <div className="rag-green">{rowData.rating}</div>;
+        }
+        else if (rowData.rating>5 && rowData.rating<=10) {
+            return <div  className="rag-yellow">{rowData.rating}</div>;
+        }
+        else {
+            return <div className="rag-red">{rowData.rating}</div>;
+        }
+    };
+
+    const onDropdownChange = (e, rowData) => {
+        setSelectedValues((prevState) => ({
+          ...prevState,
+          [rowData.id]: e.value
+        }));
+      };
+    
+      const dropdownBodyTemplate = (rowData) => {
+        return (
+          <Dropdown 
+            value={selectedValues[rowData.id]} 
+            options={ruoli} 
+            onChange={(e) => onDropdownChange(e, rowData)}
+            placeholder="Select an Option"
+          />
+        );
+      };
+
+
+    const AdminGrid2 = () => {
+        return (
+            <div className="card">
+            <DataTable value={rowData}   dataKey="id"  stripedRows showGridlines 
+            expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
+            onRowExpand={onRowExpand} onRowCollapse={onRowCollapse} rowExpansionTemplate={rowExpansionTemplate} 
+            tableStyle={{minWidth:'60rem'}}>
+                <Column expander={allowExpansion} style={{ width: '3em' }} />
+                <Column field="username" header="Username" sortable ></Column>
+                <Column field="keywords" header="Keywords" sortable ></Column>
+                <Column field="rating" header="Rating" sortable  body={Ratingstyle}></Column>
+                <Column field="role" header="Role" body={dropdownBodyTemplate} sortable ></Column>
+                
+
+            </DataTable>
+            </div>
+        );
+    };
+
+    const Save = () => {
+        console.log(selectedValues);
+    };
+
+
+
+    //--------------------------------------------Grid-------------------------------------
+    
+        
+    {/*
     const Riepilogo = users.filter(function (user) {
         return user.role.type != "admin";
     }).map((user)=>{
@@ -162,8 +209,9 @@ const AdminDashboard=()=>{
           </>
         )
     });
-    {/**/}
-    
+    */}
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading data</div>;
     return (
         <div className="dashboard ">
             <Navbarcustom />
@@ -174,7 +222,7 @@ const AdminDashboard=()=>{
           <div className="card-body">
                     
 
-                        <AdminGrid />
+          <AdminGrid2 />
                     
                     
                     </div>
@@ -184,7 +232,7 @@ const AdminDashboard=()=>{
             Cancel
           </Button>
 
-          <Button variant="primary" className="mt-2" >
+          <Button variant="primary" className="mt-2"  onClick={Save}>
             Save changes
           </Button>
 

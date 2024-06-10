@@ -23,13 +23,20 @@ import  ClassificationProvider  from './context/ClassificationProvider';
 
 import  AuthProvider  from './context/AuthProvider';
 
+//import 'primeicons/primeicons.css';
+import { PrimeReactProvider } from 'primereact/api';
+//import 'primeflex/primeflex.css';  
+import 'primereact/resources/primereact.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+
 
 function App() {
   return (
     <div >
       <BrowserRouter>
         <AuthProvider >
-          {/**/}
+          <PrimeReactProvider>
+          
           <Routes>
             <Route path="/" element={<LandingPage/> } />
             <Route path="/login" element={<Login/>} />
@@ -43,6 +50,7 @@ function App() {
             <Route path="/Frasi_Classificate" element={<Protector component={Frasi_Classificate }/>} />
             <Route path="/userProfile" element={<Protector component={UserProfilePage }/>} />
           </Routes>
+          </PrimeReactProvider>
        </AuthProvider> 
        {/**/}
       </BrowserRouter>

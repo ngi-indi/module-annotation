@@ -10,6 +10,13 @@ import { AgGridReact, useGridCellEditor } from 'ag-grid-react'; // React Data Gr
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Rating } from 'primereact/rating';
+import { Dropdown } from 'primereact/dropdown';
+import { ToastContainer, toast } from 'react-toastify';
+import { InputText } from 'primereact/inputtext';
+
 const AdminAnnotationPage = () => {
 
   const [frasi, setFrasi] = useState([]); // To handle frasi state
@@ -65,7 +72,7 @@ const AdminAnnotationPage = () => {
         setFrasi(frasi2);
 
         const formattedData = frasi2.data.map((frase) => ({
-          id:frase.id,
+          "id":frase.id,
           "sentence": frase.attributes.testo_frase,
           "users that classified it": frase.attributes.users,
           "bias type": frase.attributes.lista_bias,
@@ -88,22 +95,31 @@ const AdminAnnotationPage = () => {
 
   
 
-  const onCellValueChanged = useCallback((event) => {
+  
+
+  const onCellEditComplete = (event) => {
+    
     console.log("event",event);
-    const newRow= event.data;
+    const id = event.newRowData.id;
+    let newRow= event.newRowData;
     let updatedData=[];
     let flag=false;
 
     updatedData = rowData.map((row) =>{
-      
-      if((row.id === event.data.id) && 
-      (String(frasi.data.find(frase => frase.id === event.data.id).attributes.testo_frase) === String(newRow.sentence))){
+      console.log("row",row);
+      console.log("newRow",newRow);
+      console.log("frasi.data",frasi.data);
+      console.log("row.id",row.id);
+      console.log("id",id);
+      if((row.id === id) && 
+      (String(frasi.data.find(frase => frase.id === id).attributes.testo_frase) === String(newRow.sentence))){
+        console.log("sono uguali");
         flag=true;
-        return {...row,[event.colDef.field]:event.newValue,edited:false};
+        return {...row,[event.field]:event.newValue,edited:false};
       }
       else{
-        if(row.id === event.data.id){
-        return {...row,[event.colDef.field]:event.newValue,edited:true};
+        if(row.id === id){
+        return {...row,[event.field]:event.newValue,edited:true};
         }
         else{
           return row;
@@ -111,6 +127,8 @@ const AdminAnnotationPage = () => {
       }
     }
     );
+    
+    console.log("updatedData siamo in oncomplete",updatedData);
     setRowData(updatedData);
 
     if(!flag){
@@ -118,7 +136,7 @@ const AdminAnnotationPage = () => {
         setUpdatedRows([...updatedRows,newRow]);
       }else{
         console.log("id already in the list");
-        if (newRow[event.colDef.field]!==event.oldValue){
+        if (newRow[event.field]!==event.rowData[event.field]){
           
           setUpdatedRows(updatedRows.map((row) =>  row.id === newRow.id ? newRow : row));
         }
@@ -126,61 +144,44 @@ const AdminAnnotationPage = () => {
     }else{
       setUpdatedRows(updatedRows.filter(row => row.id !== newRow.id));
     }
-    
-  }, [rowData, setRowData]);
-
-  
-  const getRowStyle = useCallback((params) => {
-    if (params.data.changed) {
-      return { backgroundColor: 'yellow' };
-    }
-    return null;
-  }, []);
-
-  const updateDatabase = ()=>{
-
-    console.log("ciao",updatedRows);
   };
 
+  const SentenceBody = (data) => {
+    if(data.edited){
+      return <div className='rag-yellow'>{data.sentence}</div>;
+    }else{
+      return <div>{data.sentence}</div>;
+    }
+  };
+
+  const textEditor = (options) => {
+    console.log("options",options);
+    return (<InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} onKeyDown={(e) => e.stopPropagation()} />);
+};
+
+  const AdminTable = () => {
+    return (
+      <div>
+        <DataTable value={rowData} dataKey="id"  stripedRows showGridlines editMode='cell' >
+          <Column field="sentence" header="Sentence" sortable  editor={(options)=>textEditor(options)} 
+          onCellEditComplete={onCellEditComplete} body={SentenceBody}></Column>
+          <Column field="Users" header="users that classified it" sortable ></Column>
+          <Column field="bias type" header="Bias Type" sortable ></Column>
+          <Column field="created at" header="Created At" sortable ></Column>
+        </DataTable>
+      </div>
+    );
+  };
+
+  const updateDatabase = () => {
+    console.log("ciao",updatedRows);
+  };
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
   if (frasi.lenght === 0) {
     return <div>No data available</div>;
   }
-
-  const defaultColDef = {
-    sortable: true,
-    filter: true,
-    flex: 1,
-    minWidth: 100,
-    resizable: true,
-  };
-
-  
-  
-  const AdminTable = () => {
-    return (
-      <div className="ag-theme-quartz" style={{ height: 400, width: '100%' }}>
-        <AgGridReact
-          columnDefs={colDefs}
-          rowData={rowData}
-          defaultColDef={defaultColDef}
-          rowSelection='single'
-          singleClickEdit={true}
-          pagination={true}
-          onCellValueChanged={onCellValueChanged}
-          paginationPageSize={10}
-          getRowStyle={(params) => {
-            return params.data.edited ? { backgroundColor: '#FFFF00' } : {backgroundColor: ''};
-          }}
-          paginationPageSizeSelector={[10,20,50,100]}
-          
-        />
-      </div>
-    );
-  };
-  
-
   return (
     <div>
       <div>

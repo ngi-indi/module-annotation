@@ -17,6 +17,12 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Rating } from 'primereact/rating';
+import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
+
 const AnnotationPage = () => {
 
   const [frasi, setFrasi] = useState([]); // To handle frasi state
@@ -27,12 +33,9 @@ const AnnotationPage = () => {
   const[flagBatch,setFlagBatch]=useState(true);
   const [showtable, setShowtable] = useState(true);
 
-  //const [preferenze, setPreferenze] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [pageSize, setPageSize] = useState(6); // Number of rows per page
 
-   // To handle error state
-  //const [selectedOption, setSelectedOption] = useState(null);
-  //const [selectedSentimentArray, setSelectedSentimentArray] =useState([]);
-  //const [selectedSentimentArray, setSelectedSentimentArray] = useContext(SentimentContext);
   
   const classification=useClassification();
 
@@ -90,7 +93,9 @@ function shuffleArray(array) {
   if (frasi.length === 0) {
     return <div>No data available</div>;
   }
-
+  const onPage = (event) => {
+    setCurrentPage(event.first / event.rows);
+  };
   //-----------------------------Batch Frasi--------------------------------------
   const BatchFromFrasi = (frasi,batch_size) => {
     let list = [...frasi];
@@ -149,6 +154,15 @@ function shuffleArray(array) {
         toast.success("You have saved the annotations! you can annotate these now.",{
           position: "top-center"});
         setCurrentIndex((prevIndex) => (prevIndex + 1));
+
+        axios.post('http://localhost:1337/api/frasi-da-classificares/annotate', {
+          data: batchFrasi[currentIndex],
+          userId: user.id
+        }, {
+          headers: {
+            Authorization: `Bearer ${user.jwt}`
+          }
+        })
         
       }
     }
@@ -199,6 +213,26 @@ const handleCancel = async () => {
 
 
   //-----------------------------Visualizza Frasi----------------------------------
+  const VisualizzaFrasi2=()=>{
+    return(
+      <div>
+        <DataTable 
+        value={frasi}
+         dataKey="id"
+        onPage={onPage}
+        stripedRows={true}
+        showGridlines={true}// Track current page
+        first={currentPage / pageSize}
+        rows={6} // Set number of rows per page 
+        >
+          <Column field="id" header="ID"></Column>
+          <Column field="testo_frase" header="Sentences Text"></Column>
+          <Column field="lista_bias" header="Bias Questions"></Column>
+          <Column field="flag_bias" header="Answers"></Column>
+        </DataTable>
+      </div>
+    );
+  };
   const VisualizzaFrasi = batchFrasi[currentIndex].map((element,index) => {
     return(
       <tr key={element.id}>
@@ -231,19 +265,22 @@ const handleCancel = async () => {
     <div class="content ">
 
     <div class="card m-5 d-block">
-      <h5 class="card-header">Pagina n° {currentIndex +1}</h5>
+      <h5 class="card-header">Page n° {currentIndex +1}</h5>
       <div class="card-body">
-        {!showtable && (<h3 style={{alignItems:'center'}}>There are no new sentences to annotate. Wait or change your Keywords.</h3>)}
+
+        {/*<VisualizzaFrasi2/>*/}
+
+        {!showtable && (<h3 >There are no new sentences to annotate. Wait or change your Keywords.</h3>)}
         {showtable && (
           <Table striped bordered hover >
             <thead>
               <tr>
               <th scope="col">#</th>
-                <th scope="col">Testo frase</th>
+                <th scope="col">Sentences Text</th>
 
                 
                   <th scope="col">
-                    Domanda bias {<OverlayTrigger 
+                    Bias Questions {<OverlayTrigger 
                       placement="top"
                       delay={{ show: 250, hide: 400 }}
                       overlay={HoverInfoBias}
@@ -256,7 +293,7 @@ const handleCancel = async () => {
                         </a>
                       </OverlayTrigger>}
                   </th>
-                <th scope="col">risposta</th>
+                <th scope="col">Answers</th>
               </tr>
             </thead>
             <tbody>

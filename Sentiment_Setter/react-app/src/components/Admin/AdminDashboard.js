@@ -62,6 +62,10 @@ const AdminDashboard=()=>{
         setRowData(formattedData.filter(function (user) {
             return user.role != "admin";
         }));
+        setSelectedValues(formattedData.reduce((acc, user) => {
+            acc[user.id] = user.role;
+            return acc;
+        }, {}));
 
         setLoading(false);
 
@@ -72,6 +76,8 @@ const AdminDashboard=()=>{
             console.error('Error fetching data:', error);
 
         }
+        
+    
     };
 
     useEffect(() => {
@@ -79,27 +85,31 @@ const AdminDashboard=()=>{
     }, []);
 
     
-const onRowExpand = (event) => {
-    //toast.current.show({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
-};
-
-const onRowCollapse = (event) => {
-    //toast.current.show({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
-};
-
+    
 const allowExpansion = (data) => {
     return data.frasi_da_classificares.length > 0;
 };
 
 const rowExpansionTemplate = (data) => {
 
-    
+    console.log("data.frasi_da_classificares",data.frasi_da_classificares);
+    const formatData=data.frasi_da_classificares.map((frase) => {
+        return {
+            'id': frase.id,
+            'testo_frase': frase.testo_frase,
+            'lista_bias': frase.lista_bias,
+            'user_answer': frase.user_result.filter(function (user) {return Number(user.userId) === data.id;})
+                                            .map(function (user) {return user.value;})
+                                            .join(''),
+        };
+    });
+    console.log("formatData",formatData);
     return(
-        <DataTable value={data.frasi_da_classificares}   dataKey="id"  stripedRows showGridlines
+        <DataTable value={formatData} key={formatData.id}   dataKey="id"  stripedRows showGridlines
         tableStyle={{minWidth:'60rem'}}>
             <Column field="testo_frase" header="Sentence" sortable ></Column>
             <Column field="lista_bias" header="Classification" sortable ></Column>
-            <Column field="" header="User Answer" sortable ></Column>
+            <Column field="user_answer" header="User Answer" sortable ></Column>
         </DataTable>
     );
 };
@@ -126,6 +136,7 @@ const rowExpansionTemplate = (data) => {
       const dropdownBodyTemplate = (rowData) => {
         return (
           <Dropdown 
+            defaultValue={rowData.role}
             value={selectedValues[rowData.id]} 
             options={ruoli} 
             onChange={(e) => onDropdownChange(e, rowData)}
@@ -140,7 +151,7 @@ const rowExpansionTemplate = (data) => {
             <div className="card">
             <DataTable value={rowData}   dataKey="id"  stripedRows showGridlines 
             expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
-            onRowExpand={onRowExpand} onRowCollapse={onRowCollapse} rowExpansionTemplate={rowExpansionTemplate} 
+            rowExpansionTemplate={rowExpansionTemplate} 
             tableStyle={{minWidth:'60rem'}}>
                 <Column expander={allowExpansion} style={{ width: '3em' }} />
                 <Column field="username" header="Username" sortable ></Column>

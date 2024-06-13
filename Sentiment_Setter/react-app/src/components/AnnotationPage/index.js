@@ -1,21 +1,13 @@
-//import { userData } from "../../helpers";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, CloseButton} from "reactstrap";
 import { useNavigate } from "react-router-dom";
-//import { Button } from "reactstrap";
-import Select from 'react-select'
 import Navbarcustom from "../navbar";
 import { Col,Table } from "react-bootstrap";
-//import { SentimentContext } from '../../context/SentimentContext';
 import {useAuth} from "../../context/AuthProvider";
-import { useClassification } from "../../context/ClassificationProvider";
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -23,21 +15,26 @@ import { Rating } from 'primereact/rating';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import { Tooltip } from "antd";
+
 const AnnotationPage = () => {
 
   const [frasi, setFrasi] = useState([]); // To handle frasi state
-  const [currentIndex, setCurrentIndex] = useState(0);// To handle current index of the batch
   const [loading, setLoading] = useState(true); // To handle loading state    useContext(SentimentContext);
   const [error, setError] = useState(null); // To handle error state
-  const [infoHover, setInfoHover] = useState(false); // To handle hover info bias
-  const[flagBatch,setFlagBatch]=useState(true);
-  const [showtable, setShowtable] = useState(true);
 
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [pageSize, setPageSize] = useState(6); // Number of rows per page
+  const [showtable, setShowtable] = useState(true);//to handle the table visualization
+
+  const [currentPage, setCurrentPage] = useState(0); // Track current page
+
+  const [pageSize, setPageSize] = useState(6); // Number of sentences per page
+
+  const [selectedValues, setSelectedValues] = useState([]); // To handle selected values
 
   
-  const classification=useClassification();
+
 
   const navigate = useNavigate();
   const auth=useAuth();
@@ -48,14 +45,40 @@ const AnnotationPage = () => {
     { value: 'no', label: 'No' }
   ]
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
+  const BiasOptions = [
+    { case: 'Political bias', hover: 'Favoritism in the political domain.'},
+    { case: 'Linguistic bias', hover: 'Judgment influenced by language.' },
+    { case:'Cognitive Bias', hover: 'Systematic thinking errors.'},
+    { case:'Text-level Context Bias', hover: 'Influence of surrounding text.'},
+    { case:'Reporting-Level Context Bias', hover: 'Influence of surrounding reports.'},
+    { case:'Hate Speech', hover: 'Public speech promoting hate or violence.'},
+    { case:'Gender Bias', hover: 'Preference for one gender.'},
+    { case:'Racial Bias', hover: 'Discrimination based on race.'},
+    { case:'Fake News', hover: 'Spread of false information.'},
+];
 
+
+  function shuffleArrayInBlocks(array, blockSize) {
+    const shuffledBlocks = [];
+    
+    // Dividi l'array in blocchi di dimensione blockSize
+    for (let i = 0; i < array.length; i += blockSize) {
+        const block = array.slice(i, i + blockSize);
+        
+        // Mescola il blocco corrente
+        for (let j = block.length - 1; j > 0; j--) {
+            const k = Math.floor(Math.random() * (j + 1));
+            [block[j], block[k]] = [block[k], block[j]];
+        }
+        
+        // Aggiungi il blocco mescolato all'array dei blocchi mescolati
+        shuffledBlocks.push(block);
+    
+    }
+    
+    // Concatena i blocchi mescolati per ottenere l'array finale
+    return shuffledBlocks.flat();
+}
     
   //-----------------------------Fetch Frasi--------------------------------------
   useEffect(() => {
@@ -72,12 +95,13 @@ function shuffleArray(array) {
           }
         });
         
-        const frasi2=response.data;
-        console.log("frasi2",frasi2);
+        const frasi2=shuffleArrayInBlocks(response.data,pageSize);
+        console.log("frasi2",response.data);
+        if (frasi2.length === 0) {
+          setShowtable(false);
+        };
         setFrasi(frasi2);
-        classification.storeCl(new Array());
-        //setSelectedSentimentArray(new Array(response.data.data.length).fill(null));
-
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -87,65 +111,50 @@ function shuffleArray(array) {
     };
 
     fetchFrasi();
-  }, []);
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
-  if (frasi.length === 0) {
-    return <div>No data available</div>;
-  }
-  const onPage = (event) => {
-    setCurrentPage(event.first / event.rows);
-  };
-  //-----------------------------Batch Frasi--------------------------------------
-  const BatchFromFrasi = (frasi,batch_size) => {
-    let list = [...frasi];
-    list = [...Array(Math.ceil(list.length / batch_size))].map(_ => list.splice(0,batch_size));
-    //console.log("list",list);
-    if(flagBatch){
-      console.log("flagBatch",flagBatch);
-      for (let i = 0; i < list.length; i++) {
-
-        list[i]=shuffleArray(list[i]);
-      }
-      //setFlagBatch(false);
-      return list;
-    }
     
+  }, []);
   
-    return list;
+  const onPage = (event) => {
+    console.log(frasi.length);
+    
+    setCurrentPage(event.first / event.rows);
+    console.log("event",event);
   };
-
-   
-  const batchFrasi = BatchFromFrasi(frasi,6);
-
-  
-  //console.log("batchFrasi",batchFrasi);
-  
+ 
   //-----------------------------Various Handles----------------------------------
 
-  //-----Save changes
-  const handleSave_Changes = async () => {
-    console.log("Salvato");
-    //console.log(selectedSentimentArray);
-    navigate("/recap");
+  // Check if it's the last page
+  const isLastPage = () => {
+    console.log("frasi.length",frasi.length);
+    console.log("pageSize*(currentPage)",pageSize*(currentPage));
+    return (frasi.length <= pageSize*(currentPage+1));
   };
   
-  //-----Previous page and Next buttons
-  const handlePrevious = () => {
-    if (currentIndex === 0) {
-      console.log("Non ci sono frasi precedenti");
-    }
-    else{
-      setCurrentIndex((prevIndex) => (prevIndex - 1 ));
-    }
-    console.log(currentIndex);
+  // Calculate the number of pages
+  const numberOfPages = () => {
+    return Math.ceil(frasi.length / pageSize);
   };
 
-  const handleNext = () => {
-    console.log("frasi",batchFrasi.length,batchFrasi);
-    if(!batchFrasi[currentIndex].some((element) => element.flag_bias === null)){
-      if (currentIndex === batchFrasi.length-1) {
-        console.log("Non ci sono frasi successive");
+  // Handle the next button that has to load the next page and post the data
+  const handleNext = (rowData) => {
+    console.log("currentPage",currentPage);
+    console.log("selectedValues",selectedValues);
+    //setCurrentPage(currentPage + 1);
+    const length=selectedValues.length;
+
+    let numberOfRows=0;
+
+    if(frasi.length%pageSize !== 0 && isLastPage()){
+      numberOfRows = frasi.length%pageSize;
+    }
+    else{
+      numberOfRows = pageSize;
+    }
+    console.log("numberOfRows",numberOfRows);
+
+    if(selectedValues.length === numberOfRows){
+      handleSave();
+      if (isLastPage()) {
         toast.success("You have annotated all the sentences!",{
           position: "top-center"});
           setShowtable(false);
@@ -153,110 +162,118 @@ function shuffleArray(array) {
       else{
         toast.success("You have saved the annotations! you can annotate these now.",{
           position: "top-center"});
-        setCurrentIndex((prevIndex) => (prevIndex + 1));
-
-        axios.post('http://localhost:1337/api/frasi-da-classificares/annotate', {
-          data: batchFrasi[currentIndex],
-          userId: user.id
-        }, {
-          headers: {
-            Authorization: `Bearer ${user.jwt}`
-          }
-        })
+        
+        setCurrentPage(currentPage + 1);
+        
+        setSelectedValues([]);
+        
         
       }
     }
     else{
-      console.log("Devi completare tutte le frasi");
       toast.error("you have to complete all the sentences",{
         position: "top-center"});
     
 
     }
-  };
-  //----- Change
-/**/
-  const handleChange = (option,id) => {
-    batchFrasi[currentIndex].map((element) => {
-      if (element.id === id) {
-        if(option.value === 'si'){
-          element.flag_bias = true;
-        }
-        else{
-          element.flag_bias = false;
-        }
-      }
-    });
-    console.log("batchFrasi",batchFrasi);
+
   };
 
-const handleCancel = async () => { 
-  console.log("Cancellato");
-  navigate("/dashboard");    
-  };
-  //----- Hover info
-  const handleHover = () => {
-    setInfoHover(true);
-  };
-  const handleLeave = () => {
-    setInfoHover(false);
-  };
 
   
-  const HoverInfoBias = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Un bias è un pregiudizio o una preferenza che influenza il giudizio.
-    </Tooltip>
-  );
 
-/* //AGGIUNGERE FRASI TEST, PER poi fare i batch con entrambi i tipi, ovviamente ordine casuale */
+const handleCancel = async () => { 
+  setSelectedValues([]);
+  navigate("/dashboard");    
+  };
+  
+  
 
+  const onDropdownChange = (e, rowData) => {
+    const arrayOfObjects = [...selectedValues];
+    arrayOfObjects.push({id: rowData.id,value: e.value});
+    setSelectedValues(arrayOfObjects);
+    
+  };
+
+  const dropdownAnswerTemplate = (rowData) => {
+    return (
+      <Dropdown 
+      
+        value={selectedValues.find(e => e.id === rowData.id)?.value} 
+        options={options} 
+        onChange={(e) => onDropdownChange(e, rowData)}
+        placeholder="Select an Option"
+      />
+    );
+  };
+
+const tooltipTemplate = (rowData) => {
+  if (BiasOptions.some(e => e.case === rowData.lista_bias)) {
+    
+    return BiasOptions.find(e => e.case === rowData.lista_bias).hover;
+  }
+  return ('I don\'t know what this bias is about. Please, help me!');
+};
 
   //-----------------------------Visualizza Frasi----------------------------------
   const VisualizzaFrasi2=()=>{
     return(
-      <div>
+      <div className='card'>
         <DataTable 
         value={frasi}
          dataKey="id"
+        paginator={true} // Set pagination to true
+        paginatorTemplate=""
         onPage={onPage}
-        stripedRows={true}
-        showGridlines={true}// Track current page
-        first={currentPage / pageSize}
-        rows={6} // Set number of rows per page 
+        stripedRows
+        showGridlines
+        first={currentPage * pageSize} // Set the first row per page
+        rows={pageSize} // Set number of rows per page 
+
         >
-          <Column field="id" header="ID"></Column>
           <Column field="testo_frase" header="Sentences Text"></Column>
-          <Column field="lista_bias" header="Bias Questions"></Column>
-          <Column field="flag_bias" header="Answers"></Column>
+          <Column field="lista_bias" header="Bias Questions" body={(rowData) => (
+           <Tooltip title={tooltipTemplate(rowData)}>
+           <span>In this sentence, is present a {rowData.lista_bias} ?</span>
+         </Tooltip>
+        )} />
+          <Column field="flag_bias" header="Answers" body={dropdownAnswerTemplate}></Column>
         </DataTable>
+        <Tooltip target=".custom-tooltip" position="top" />
       </div>
     );
   };
-  const VisualizzaFrasi = batchFrasi[currentIndex].map((element,index) => {
-    return(
-      <tr key={element.id}>
-          <td>{index+1}</td>
-
-          <td>{element.testo_frase}</td>
-          
-          <td>
-          Credi che in questa frase sia presente un {element.lista_bias} ?
-          </td>
-          
-          <td> 
-            <Select className="dropdown"
-              options={options}
-              value={options.find(option => option.value === element.flag_bias || null)}
-              onChange={(option) => {handleChange(option,element.id)}}
-            />
-
-          </td>
-        </tr>
-    );
-  });
+  
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(`http://localhost:1337/api/frasi-da-classificares/update-json-frasi`, 
+        {
+          "data": {
+            "items" : selectedValues // Corpo della richiesta
+          },
+        },
+        {
+          params: {
+            "userId": user.id, // Query parameter
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      );
+  
+      console.log('Response data:', response.data);
+    } catch (error) {
+      console.error('Error updating relation:', error.response ? error.response.data : error.message);
+    }
+  };
 
 //-----------------------------Return Principale----------------------------------
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+  
   return(<div>
     <div>
     <ToastContainer />
@@ -265,45 +282,14 @@ const handleCancel = async () => {
     <div class="content ">
 
     <div class="card m-5 d-block">
-      <h5 class="card-header">Page n° {currentIndex +1}</h5>
+      {showtable &&(<h5 class="card-header">Page n° {currentPage +1}</h5>)}
+      {!showtable &&(<h5 class="card-header">Annotation Completed</h5>)}
       <div class="card-body">
 
-        {/*<VisualizzaFrasi2/>*/}
+      {showtable && ( <VisualizzaFrasi2/>)}
 
-        {!showtable && (<h3 >There are no new sentences to annotate. Wait or change your Keywords.</h3>)}
-        {showtable && (
-          <Table striped bordered hover >
-            <thead>
-              <tr>
-              <th scope="col">#</th>
-                <th scope="col">Sentences Text</th>
-
-                
-                  <th scope="col">
-                    Bias Questions {<OverlayTrigger 
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={HoverInfoBias}
-                      >
-                        <a className='hover' 
-                        onMouseEnter={()=>handleHover} 
-                        onMouseLeave={()=>handleLeave} 
-                        style={{ color: "grey",textDecoration: "none", cursor:"pointer"}}>
-                          i
-                        </a>
-                      </OverlayTrigger>}
-                  </th>
-                <th scope="col">Answers</th>
-              </tr>
-            </thead>
-            <tbody>
-              {VisualizzaFrasi}
-            </tbody>
-          </Table>
-          )}
-
-          
-        
+      {!showtable && (<h3 >There are no new sentences to annotate. Wait or change your Keywords.</h3>)}
+            
       </div>
     </div>
       <Col className="d-flex justify-content-around">
@@ -311,13 +297,12 @@ const handleCancel = async () => {
           Back to Dashboard
         </Button>
 
-        <Button onClick={handleNext} variant="primary" class="mt-2">
+        <Button onClick={handleNext} disabled={!showtable}variant="primary" class="mt-2">
           Save 
         </Button>
       </Col>
     </div>
     <br></br>
-    {/*<Button onClick={handleSave_Changes}>Salva i cambiamenti</Button>   <Button onClick={handleCancel}>Cancel</Button>*/}
   </div>);
 };
 

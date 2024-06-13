@@ -131,25 +131,25 @@ import 'react-toastify/dist/ReactToastify.css';
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="email" >
-                    <Form.Label>Indirizzo mail</Form.Label>
+                    <Form.Label>Mail address</Form.Label>
                     <Form.Control type="email" defaultValue={email} onChange={handleInputChange} name="email"/>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="password" >
-                    <Form.Label>Nuova Password</Form.Label>
+                    <Form.Label>New Password</Form.Label>
                     <Form.Control type="email" placeholder="la tua vecchia psw" />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="password" >
-                    <Form.Label>Reinserisci la Password</Form.Label>
+                    <Form.Label>Reinsert Password</Form.Label>
                     <Form.Control type="email" placeholder="" />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="TextareaBias">
-                    <Form.Label>Keyword che vuoi visualizzare:</Form.Label>
+                    <Form.Label>Keyword you dont want to visualize :</Form.Label>
                     <br></br>
                     <Form.Text id="avvertimento" muted>
-                      Inserire i valori separati da ";".
+                      Insert values separated by ";".
                     </Form.Text>
                     <Form.Control as="textarea" rows={3} defaultValue={TextForForm(JSON.stringify(lista_bias))} onChange={handleInputChange} name="lista_bias" spellCheck="false" />
                   </Form.Group>

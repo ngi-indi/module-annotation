@@ -6,16 +6,13 @@ import Navbarcustom from "../navbar";
 import { Col } from "react-bootstrap";
 import { useAuth } from "../../context/AuthProvider";
 
-import { AgGridReact, useGridCellEditor } from 'ag-grid-react'; // React Data Grid Component
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
-
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Rating } from 'primereact/rating';
 import { Dropdown } from 'primereact/dropdown';
 import { ToastContainer, toast } from 'react-toastify';
 import { InputText } from 'primereact/inputtext';
+
 
 const AdminAnnotationPage = () => {
 
@@ -24,25 +21,9 @@ const AdminAnnotationPage = () => {
   const [error, setError] = useState(null); // To handle error state
   const [rowData, setRowData] = useState([]);
   const [updatedRows,setUpdatedRows]=useState([]);
+  const [formattedData,setFormattedData]=useState([]);
   
-  const CustomButtonComponent = (props) => {
-    return <Button style={{boxSizing: 'border-box',
-      height: '30px',  // Set your desired height
-      width: 'auto',   // Set your desired width
-      textAlign:'center',
-      justify:'center',
-      alignItems:'center'}} onClick={() => window.alert(props.data.sentence) }>Push Me!</Button>;
-  };
-  // Column Definitions: Defines the columns to be displayed.
-  const [colDefs] = useState([
-    { field: "sentence",
-      editable:  true,
-      cellEditor: 'agTextCellEditor'
-    },
-    { field: "users that classified it" },
-    { field: "bias type" },
-    { field: "created at" },
-  ]);
+  
 
   const navigate = useNavigate();
   const auth = useAuth();
@@ -70,18 +51,19 @@ const AdminAnnotationPage = () => {
 
         const frasi2 = response.data;
         setFrasi(frasi2);
-
-        const formattedData = frasi2.data.map((frase) => ({
+        //console.log("frasi",frasi[0].attributes.users.data.map((user) => user.attributes.username).join(', '));
+        const formattedData2 = frasi2.data.map((frase) => ({
           "id":frase.id,
           "sentence": frase.attributes.testo_frase,
-          "users that classified it": frase.attributes.users,
+          "users that classified it": frase.attributes.users.data.map((user) => user.attributes.username).join(', '),
           "bias type": frase.attributes.lista_bias,
           "created at": frase.attributes.createdAt,
 
         }));
 
-        setRowData(formattedData);
-
+        setRowData(formattedData2);
+        setFormattedData(formattedData2);
+        console.log("formattedData",formattedData2);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -99,18 +81,13 @@ const AdminAnnotationPage = () => {
 
   const onCellEditComplete = (event) => {
     
-    console.log("event",event);
     const id = event.newRowData.id;
     let newRow= event.newRowData;
     let updatedData=[];
     let flag=false;
 
+
     updatedData = rowData.map((row) =>{
-      console.log("row",row);
-      console.log("newRow",newRow);
-      console.log("frasi.data",frasi.data);
-      console.log("row.id",row.id);
-      console.log("id",id);
       if((row.id === id) && 
       (String(frasi.data.find(frase => frase.id === id).attributes.testo_frase) === String(newRow.sentence))){
         console.log("sono uguali");
@@ -128,7 +105,6 @@ const AdminAnnotationPage = () => {
     }
     );
     
-    console.log("updatedData siamo in oncomplete",updatedData);
     setRowData(updatedData);
 
     if(!flag){
@@ -163,9 +139,9 @@ const AdminAnnotationPage = () => {
     return (
       <div>
         <DataTable value={rowData} dataKey="id"  stripedRows showGridlines editMode='cell' >
-          <Column field="sentence" header="Sentence" sortable  editor={(options)=>textEditor(options)} 
+          <Column field="sentence" header="Sentence"  sortable filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} editor={(options)=>textEditor(options)} 
           onCellEditComplete={onCellEditComplete} body={SentenceBody}></Column>
-          <Column field="Users" header="users that classified it" sortable ></Column>
+          <Column field="users that classified it" header="users that classified it" sortable ></Column>
           <Column field="bias type" header="Bias Type" sortable ></Column>
           <Column field="created at" header="Created At" sortable ></Column>
         </DataTable>
@@ -174,7 +150,24 @@ const AdminAnnotationPage = () => {
   };
 
   const updateDatabase = () => {
+    toast.success("changes saved successufully", {
+      position: "top-center"
+    });
     console.log("ciao",updatedRows);
+  };
+
+  const handleCancel=() =>{
+    if (updatedRows.length==0){
+      toast.info("There aren't changes to cancel.", {
+        position: "top-center"
+      })
+    }else{
+      setUpdatedRows([]);
+      setRowData(formattedData);
+      toast.success("All changes were cancelled.", {
+        position: "top-center"
+      })
+    }
   };
   
   if (loading) return <div>Loading...</div>;
@@ -184,6 +177,7 @@ const AdminAnnotationPage = () => {
   }
   return (
     <div>
+      <ToastContainer/>
       <div>
         <Navbarcustom />
       </div>
@@ -196,7 +190,7 @@ const AdminAnnotationPage = () => {
           </div>
         </div>
         <Col className="d-flex justify-content-around">
-          <Button variant="secondary" className="mt-2">
+          <Button variant="secondary" className="mt-2" onClick={handleCancel}>
             Cancel
           </Button>
 

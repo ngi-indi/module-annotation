@@ -28,11 +28,12 @@ const Navbarcustom = () => {
     ];*/
     const links = [
         { text: 'contact', destination: '#contattaci', scope: ['/'],id:'contattaci'},
-        { text: 'Profilo', destination: '/userProfile', scope: ['/dashboard','/annotation','/Frasi_Classificate'],id:'profilo'},
-        { text: 'Logout', onclick:handleLogout, destination:{location}, scope:['/dashboard','/annotation','Frasi_Classificate','/Frasi_Classificate'],id:'logout'},
+        { text: 'Profile', destination: '/userProfile', scope: ['/dashboard','/annotation','/Frasi_Classificate'],id:'profilo'},
+        { text: 'Logout', onclick:handleLogout, destination:{location}, scope:['/dashboard','/annotation','Frasi_Classificate','/Frasi_Classificate','/annotation-admin','/admin'],id:'logout'},
         { text: 'Login', destination: '/login', scope:['/login','/register','/landingpage','/'],id:'login'},
         { text: 'Signup', destination: '/registration', scope: ['/login','/register','/landingpage','/'],id:'signup'},
-        { text: 'Dashboard', destination: '/dashboard', scope: ['/userProfile','/annotation','/Frasi_Classificate'],id:'dashboard'},
+        { text: 'Dashboard', destination: '/dashboard', scope: ['/userProfile','/annotation','/Frasi_Classificate','/annotation-admin','/admin'],id:'dashboard'},
+       
     ];
   // Function to determine if a link should be active based on the current location
   const visibleLinks = links.filter(link => {

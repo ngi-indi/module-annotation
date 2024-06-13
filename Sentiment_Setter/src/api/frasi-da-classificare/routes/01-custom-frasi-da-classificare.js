@@ -10,7 +10,7 @@ module.exports = {
         },
       },
       {
-        method: 'POST',
+        method: 'PUT',
         path: '/frasi-da-classificares/update-json-frasi',
         handler: 'frasi-da-classificare.UpdateJsonFrasi',
         config: {

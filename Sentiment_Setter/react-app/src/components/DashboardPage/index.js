@@ -56,8 +56,9 @@ const DashboardPage = () => {
               </h2>
           </Card.Header>
           <Card.Body>
-            <h4>Sentence Annotated : insert number of sentences Annotated by the user</h4>
-            
+            <br></br>
+            <h4>Sentence Annotated : {user.frasi_classificate?.lenght}</h4>
+            <br></br>
             <Col className="d-flex justify-content-around">
             <Button onClick={handleAnnotationPage}>Annotation</Button>
             <AdminRole/>

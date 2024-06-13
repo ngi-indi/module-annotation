@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
+  localStorage.clear();
   const initialUser={email:"",password:""}
   const [input, setInput] = useState({
     email: "",
@@ -24,7 +25,8 @@ const Login = () => {
     console.log("input", input);
     if (input.email !== "" && input.password !== "") {
       auth.loginAction(input);
-      if (!auth.user) {
+      console.log("auth", auth);
+      if (auth.user===null||auth.user==='') {
         toast.error("Login failed");
       }
       return;

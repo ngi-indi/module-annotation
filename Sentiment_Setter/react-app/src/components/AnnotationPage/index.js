@@ -86,14 +86,16 @@ const AnnotationPage = () => {
       try {
         const  jwt  = user.jwt
     
-        const response = await axios.get('http://localhost:1337/api/frasi-da-classificares/not-related-to-user', {
-          headers: {
-            Authorization: `Bearer ${jwt}`
-          },
+        const response = await axios.get('http://localhost:1337/api/frasi-da-classificares/not-related-to-user', 
+        {
           params: {
-            userId: user.id
-          }
-        });
+            userId: user.id, // Query parameter
+          },
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      );
         
         const frasi2=shuffleArrayInBlocks(response.data,pageSize);
         console.log("frasi2",response.data);

@@ -8,18 +8,28 @@ const { filter } = require('../../../../config/middlewares');
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
+
+
 module.exports = createCoreController('api::frasi-da-classificare.frasi-da-classificare', ({ strapi }) => ({
   
   async NotRelatedToUser(ctx) {
       
       const {userId}=ctx.query;
+
+      if (!userId) {
+        return ctx.badRequest('userId is required');   
+      }
+
+      const user=await strapi.db.query('plugin::users-permissions.user').findOne({
+        where: { id: userId },
+        populate: ['lista_bias'],
+      });
+      const keywords=user.lista_bias;
+
+      console.log("keyword",keywords);
       //const body = JSON.parse(ctx.request.body);
       //const {lista_keyword}=body;
 
-      if (!userId) {
-          return ctx.badRequest('userId is required');
-          
-      }
       const frasi = await strapi.service("api::frasi-da-classificare.frasi-da-classificare").find({
           fields:['id','testo_frase','flag_classificazione','lista_bias','flag_test','flag_bias'],
           populate:{
@@ -74,12 +84,16 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
 
 
       
-      //rimuovi i campi inutili
+      //rimuovi le frasi che contengono le keyword nel testo, che è una stringa
+      if (keywords!=null && keywords.length>0) {
+        const filteredFrasi5=filteredFrasi4.filter(frase => !keywords.some(keyword => frase.testo_frase.includes(keyword)));
+        console.log("filteredFrasikeyword",filteredFrasi2);
 
-      
-      
-      return filteredFrasi4;
-
+        return filteredFrasi5;
+      }
+      else{
+        return filteredFrasi4;
+      }
   },
     
 
@@ -95,12 +109,12 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
           const  items  = body.data.items;
           const {userId}=ctx.query;
           console.log("userId",userId);
-
+          
+          /**/
           const user = await strapi.db.query('plugin::users-permissions.user').findOne({
             where: { id: userId },
             populate: ['frasi_da_classificares'],
-          })
-          console.log("user",user);
+          });
 
           // Iterate over the array of items
           const updatedElements = [];
@@ -151,12 +165,15 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
                 }
 
                 //user.frasi_da_classificare.push(id);
+                
+
                 const userUpdated2 = await strapi.query("plugin::users-permissions.user").update({
                   where: { id: userId },
                   data:{frasi_da_classificares : {
                     connect: [id]
                   } }
                 });
+                
                 
                 
               } catch (error) {
@@ -177,7 +194,40 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
       ctx.badRequest('Error processing request');
       
       }/**/
-  }
+  },
+
+  async UpdateTestoFrasi(ctx){
+    console.log("UpdateTestoFrasi");
+    const body=ctx.request.body;
+    console.log("body",body);
+
+    const sentences=body.data.items;
+    console.log("frasi",sentences);
+
+    for (const sentence of sentences) {
+      
+      const response = await strapi.entityService.create('api::frasi-da-classificare.frasi-da-classificare', {
+        data:{
+          testo_frase: sentence.sentence,
+          version: (Number(sentence.version)+1),
+          flag_classificazione: false,
+          flag_test: true,
+          flag_bias: false,
+          lista_bias: sentence.bias_type,
+          users: [],
+        }
+      });
+
+
+
+    }
+
+    return ctx.send("ok");
+    
+    
+
+    
+  },
 }
 
     )

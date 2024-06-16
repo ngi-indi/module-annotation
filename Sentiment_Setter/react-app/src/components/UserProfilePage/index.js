@@ -66,7 +66,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
         console.log("user1",user1);
         //auth.storeUser(user1); DA SISTEMARE
-        localStorage.setItem("user",JSON.stringify(user1));
+        //localStorage.setItem("user",JSON.stringify(user1));
 
         const response =await axios.put(`http://localhost:1337/api/users/${id}`, {
           username: user1.username,
@@ -88,7 +88,9 @@ import 'react-toastify/dist/ReactToastify.css';
             position: "top-center"
           });
         }
-        
+        //auth.storeUser(user1);// DA SISTEMARE
+        localStorage.setItem("user",JSON.stringify(user1));
+        console.log("user",localStorage.getItem("user"));
         console.log("response",response);
       }
 

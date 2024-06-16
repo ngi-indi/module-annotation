@@ -17,6 +17,16 @@ module.exports = {
           policies: [],
           middlewares: [],
         },
+      },
+      {
+        method: 'POST',
+        path: '/frasi-da-classificares/update-testo-frasi',
+        handler: 'frasi-da-classificare.UpdateTestoFrasi',
+        config: {
+          policies: [],
+          middlewares: [],
+        },
+
       }
     ],
   };

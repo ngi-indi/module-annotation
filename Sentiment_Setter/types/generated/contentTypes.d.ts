@@ -362,57 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiFrasiClassificateFrasiClassificate
-  extends Schema.CollectionType {
-  collectionName: 'frasi_classificates';
-  info: {
-    singularName: 'frasi-classificate';
-    pluralName: 'frasi-classificates';
-    displayName: 'frasi_classificate';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    testo_frase: Attribute.Text;
-    lista_topic: Attribute.Enumeration<
-      [
-        'Linguistic bias',
-        'Text-level Context Bias',
-        'Reporting-Level Context Bias',
-        'Cognitive Bias',
-        'Hate Speech',
-        'Racial bias',
-        'Fake news',
-        'Gender Bias',
-        'Political bias'
-      ]
-    >;
-    sentiment: Attribute.String;
-    users_permissions_user: Attribute.Relation<
-      'api::frasi-classificate.frasi-classificate',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::frasi-classificate.frasi-classificate',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::frasi-classificate.frasi-classificate',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface ApiFrasiDaClassificareFrasiDaClassificare
   extends Schema.CollectionType {
   collectionName: 'frasi_da_classificares';
@@ -449,6 +398,7 @@ export interface ApiFrasiDaClassificareFrasiDaClassificare
     >;
     flag_bias: Attribute.Boolean;
     user_result: Attribute.JSON;
+    version: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -909,7 +859,6 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::frasi-classificate.frasi-classificate': ApiFrasiClassificateFrasiClassificate;
       'api::frasi-da-classificare.frasi-da-classificare': ApiFrasiDaClassificareFrasiDaClassificare;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;

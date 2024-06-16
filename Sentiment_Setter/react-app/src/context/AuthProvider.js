@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
             Authorization: `Bearer ${data.jwt}`
           },
           params:{
-            populate: ["role"]
+            populate: ["role","frasi_da_classificares"]
           }
         });
         console.log("res",data2);
@@ -39,7 +39,8 @@ const AuthProvider = ({ children }) => {
                         id: data2.data.id,
                         email: data2.data.email,
                         role: data2.data.role.type,
-                        lista_bias: data2.data.lista_bias
+                        lista_bias: data2.data.lista_bias,
+                        sentences: data2.data.frasi_da_classificares||[]
                       };
 
         storeUser(user);
@@ -66,8 +67,6 @@ const AuthProvider = ({ children }) => {
 
   const logOut = () => {
     setUser(null);
-    //setToken("");
-    //localStorage.removeItem("site");
     localStorage.removeItem("user");
     navigate("/");
   };

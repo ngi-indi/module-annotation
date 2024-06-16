@@ -19,6 +19,7 @@ import { Rating } from 'primereact/rating';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { ToastContainer, toast } from 'react-toastify';
+import { Flag } from "@mui/icons-material";
 
 
 const AdminDashboard=()=>{
@@ -31,6 +32,7 @@ const AdminDashboard=()=>{
     const [expandedRows, setExpandedRows] = useState(null);
     const [rowData, setRowData] = useState([]);
     const [selectedValues, setSelectedValues] = useState({});
+    const [controlValues, setControlValues] = useState({});
 
     const ruoli = [
         { value: 'admin', label: 'Admin' },
@@ -57,11 +59,16 @@ const AdminDashboard=()=>{
                 'frasi_da_classificares': user.frasi_da_classificares,
                 'keywords': (user.lista_bias===null?"No keywords":String(user.lista_bias).split(',').join(', ')),
             };
-        });
-
+        }).filter(function (user) {
+            return user.role != "admin";});
+        
         setRowData(formattedData.filter(function (user) {
             return user.role != "admin";
         }));
+        setControlValues(formattedData.reduce((acc, user) => {
+            acc[user.id] = user.role;
+            return acc;
+        }, {}));
         setSelectedValues(formattedData.reduce((acc, user) => {
             acc[user.id] = user.role;
             return acc;
@@ -127,6 +134,7 @@ const rowExpansionTemplate = (data) => {
     };
 
     const onDropdownChange = (e, rowData) => {
+        
         setSelectedValues((prevState) => ({
           ...prevState,
           [rowData.id]: e.value
@@ -165,8 +173,34 @@ const rowExpansionTemplate = (data) => {
         );
     };
 
-    const Save = () => {
+    const Save =async () => {
         console.log(selectedValues);
+        const users1=[];
+        console.log(users);
+        let data = {};
+
+
+    
+        const response = await axios.post(`http://localhost:1337/api/users-permissions/user/change-role`,{
+            "data" :{
+                "items": selectedValues,
+            }},
+            {
+            headers: {
+                Authorization: `Bearer ${user.jwt}`,
+                'Content-Type': 'application/json',
+                
+            },
+        });
+        console.log(response);
+        if (response.status === 200) {
+            toast.success('Users updated successfully', {position: "top-center"});
+        }
+        else {
+            toast.error('Error updating users', {position: "top-center"});
+        }
+
+        
     };
 
 
@@ -226,6 +260,7 @@ const rowExpansionTemplate = (data) => {
     return (
         <div className="dashboard ">
             <Navbarcustom />
+            <ToastContainer />
             <div class="d-flex flex-column content">
                 
                 <div className="card m-5 d-block">

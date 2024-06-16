@@ -45,6 +45,9 @@
     },
     "user_result": {
       "type": "json"
+    },
+    "version": {
+      "type": "integer"
     }
   }
 }

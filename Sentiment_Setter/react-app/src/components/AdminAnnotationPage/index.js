@@ -56,8 +56,14 @@ const AdminAnnotationPage = () => {
           "id":frase.id,
           "sentence": frase.attributes.testo_frase,
           "users that classified it": frase.attributes.users.data.map((user) => user.attributes.username).join(', '),
-          "bias type": frase.attributes.lista_bias,
+          "bias_type": frase.attributes.lista_bias,
           "created at": frase.attributes.createdAt,
+          "flag_test": frase.attributes.flag_test,
+          "flag_classificazione": frase.attributes.flag_classificazione,
+          "flag_bias": frase.attributes.flag_bias,
+          "user_result": frase.attributes.user_result,
+          "user": frase.attributes.user,
+          "version": frase.attributes.version||1,
 
         }));
 
@@ -142,19 +148,42 @@ const AdminAnnotationPage = () => {
           <Column field="sentence" header="Sentence"  sortable filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} editor={(options)=>textEditor(options)} 
           onCellEditComplete={onCellEditComplete} body={SentenceBody}></Column>
           <Column field="users that classified it" header="users that classified it" sortable ></Column>
-          <Column field="bias type" header="Bias Type" sortable ></Column>
+          <Column field="bias_type" header="Bias Type" sortable ></Column>
+          <Column field="version" header="Version" sortable ></Column>
           <Column field="created at" header="Created At" sortable ></Column>
         </DataTable>
       </div>
     );
   };
 
-  const updateDatabase = () => {
-    toast.success("changes saved successufully", {
+  const updateDatabase = async () => {
+
+    // Send each updated row to Strapi
+    const response = await axios.post('http://localhost:1337/api/frasi-da-classificares/update-testo-frasi', {
+      data:{
+        items: updatedRows
+      } 
+    }, {
+      headers: {
+        Authorization: `Bearer ${user.jwt}`,
+        'Content-Type': 'application/json',
+      }
+
+  });
+  if (response.status === 200|| response==="ok") {
+    console.log("response",response);
+    setUpdatedRows([]);
+    setRowData(formattedData);
+    toast.success("Data updated successfully", {
       position: "top-center"
     });
-    console.log("ciao",updatedRows);
-  };
+  } else {
+    console.error('Error updating data:', response);
+    toast.error("Error updating data", {
+      position: "top-center"
+    });
+  }
+};
 
   const handleCancel=() =>{
     if (updatedRows.length==0){

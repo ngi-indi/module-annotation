@@ -172,7 +172,10 @@ const rowExpansionTemplate = (data) => {
             </div>
         );
     };
-
+    const handleCancel=() =>{
+        setSelectedValues(controlValues);
+        toast.info('Changes canceled', {position: "top-center"});
+    };
     const Save =async () => {
         console.log(selectedValues);
         const users1=[];
@@ -264,7 +267,7 @@ const rowExpansionTemplate = (data) => {
             <div class="d-flex flex-column content">
                 
                 <div className="card m-5 d-block">
-          <h5 className="card-header">Sentences Table</h5>
+          <h5 className="card-header">Users Table</h5>
           <div className="card-body">
                     
 
@@ -274,7 +277,7 @@ const rowExpansionTemplate = (data) => {
                     </div>
 
                     <Col className="d-flex justify-content-around">
-          <Button variant="secondary" className="mt-2">
+          <Button variant="secondary" className="mt-2" onClick={handleCancel}>
             Cancel
           </Button>
 

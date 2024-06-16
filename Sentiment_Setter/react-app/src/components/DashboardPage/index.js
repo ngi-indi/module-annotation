@@ -68,7 +68,7 @@ const DashboardPage = () => {
     
     return (
       <div>
-        <h4>Sentence annotated in the last session : </h4>
+        <h4>Sentences annotated in the last session : </h4>
           
         <DataTable className="card" value={user.sentences} dataKey="id"  stripedRows showGridlines editMode='cell' >
           <Column field="testo_frase" header="Sentence"></Column>
@@ -78,7 +78,10 @@ const DashboardPage = () => {
     );}
     else{
       return(
-        <div></div>
+        <div>
+          <h4> As an admin you have to control user's rating and the state of the sentences.</h4>
+          <img src="/admin.png" alt="admin" style={{display: "block", marginLeft: "auto",marginRight: "auto",width: "40%"}}/>
+        </div>
       );
     }
       

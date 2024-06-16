@@ -48,7 +48,7 @@ const Navbarcustom = () => {
   //console.log('location.pathname',location.pathname);
     return (
         <Navbar bg="primary" variant="dark" expand="lg" fixed="top" >
-        <Container class="container-fluid">
+        <Container className="container-fluid">
           <Navbar.Brand href="/">Sentiment Setter</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className='ml-auto'>

@@ -98,6 +98,7 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
     
 
   async UpdateJsonFrasi(ctx){
+      const numMaxClassifications=3;
       console.log("UpdateJsonFrasi");
       try {
       
@@ -142,14 +143,26 @@ module.exports = createCoreController('api::frasi-da-classificare.frasi-da-class
 
                 // Update the JSON field by adding the pair id-value
                 element.user_result.push({userId:userId, value:value});
+                
 
                 // Save the changes
-                //return strapi.service('api::frasi-da-classificare.frasi-da-classificare').update({ id }, element);
-                const updatedElement = await strapi.entityService.update('api::frasi-da-classificare.frasi-da-classificare', id, {
-                  data: { user_result: element.user_result, users:{
+                console.log(element.user_result.length);
+                let updatedElement = null;
+                if(element.user_result.length>=numMaxClassifications){
+                  console.log(numMaxClassifications);
+                  updatedElement = await strapi.entityService.update('api::frasi-da-classificare.frasi-da-classificare', id, {
+                  data: { flag_classificazione:"true",user_result: element.user_result, users:{
                     connect: [userId] 
                   } },
                 });
+                }else{
+                  updatedElement = await strapi.entityService.update('api::frasi-da-classificare.frasi-da-classificare', id, {
+                    data: {user_result: element.user_result, users:{
+                      connect: [userId] 
+                    } },
+                  });
+                }
+                
                 updatedElements.push(updatedElement);
                 
 

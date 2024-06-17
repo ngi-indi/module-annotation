@@ -2,38 +2,48 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Col, Row} from "reactstrap";
 import Navbarcustom from "../navbar";
 import {Form,Button} from 'react-bootstrap';
+import { waitFor } from "@testing-library/react";
+import { ToastContainer,toast } from "react-toastify";
 
 const initialUser = { email: "", password: "", username: "", lista_bias: "" };
 const Registration = () => {
   const [user, setUser] = useState(initialUser);
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+      setValidated(true);
+    } else {
+      await signUp();
     }
-
-    setValidated(true);
   };
-  const signUp = async () => {
 
+  const signUp = async () => {
     try {
       const url = `http://localhost:1337/api/auth/local/register`;
       if (user.username && user.email && user.password) {
         const res = await axios.post(url, user);
-        if (!!res) {
+        if (res.status === 200) {
           setUser(initialUser);
-          navigate("/login");
+          toast.success("User registrated successfully", { position: "top-center" });
+          setTimeout(() => {
+            navigate("/login");
+          }, 1000); // Delay navigation to allow the user to see the success message
+        } else {
+          toast.error("Error while saving the user", { position: "top-center" });
         }
       }
     } catch (error) {
-        console.error(error);
+      console.error(error);
+      toast.error("Error while saving the user", { position: "top-center" });
     }
   };
 
@@ -49,6 +59,7 @@ const Registration = () => {
     <div>
       <div>
         <Navbarcustom />
+        <ToastContainer />
       </div>
     <div class="content" >
     <Row className="register" >
@@ -75,22 +86,22 @@ const Registration = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="password" >
-                    <Form.Label>Reinserisci la Password</Form.Label>
-                    <Form.Control required type="email" placeholder="password" value={user.password} onChange={handleUserChange}/>
+                    <Form.Label>Insert a Password</Form.Label>
+                    <Form.Control required type="password" placeholder="password" value={user.password} onChange={handleUserChange} name="password"/>
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid password.
                     </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="TextareaBias">
-                    <Form.Label>Keyword che vuoi visualizzare:</Form.Label>
+                    <Form.Label>Keywords that you don't want to visualize :</Form.Label>
                     <br></br>
                     <Form.Text id="avvertimento" muted>
-                      Inserire i valori separati da ";".
+                      Insert values separated by ";".
                     </Form.Text>
                     <Form.Control as="textarea" rows={3} value={user.lista_bias} onChange={handleUserChange} name="lista_bias" spellCheck="false" />
                   </Form.Group>
-                  <Button variant="primary" type="submit" onClick={signUp}> SignUp </Button>
+                  <Button variant="primary" type="submit">Sign Up</Button>
             </Form> 
 
           

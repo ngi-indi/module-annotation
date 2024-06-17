@@ -6,9 +6,6 @@ import Navbarcustom from "../navbar";
 import { Col,Table } from "react-bootstrap";
 import {useAuth} from "../../context/AuthProvider";
 
-
-
-
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Rating } from 'primereact/rating';

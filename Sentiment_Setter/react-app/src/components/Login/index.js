@@ -26,12 +26,15 @@ const Login = () => {
     if (input.email !== "" && input.password !== "") {
       auth.loginAction(input);
       console.log("auth", auth);
+      setTimeout(() => {
+
       if (auth.user===null||auth.user==='') {
-        toast.error("Login failed");
+        toast.error("Login failed", { position: "top-center" });
       }
-      return;
+    },1000);
+    }else{
+      toast.info("Please fill all the fields", { position: "top-center" });
     }
-    toast.error("Please fill all the fields");
   };
 
   const handleInput = (e) => {
@@ -45,41 +48,39 @@ const Login = () => {
   return (
     <Container>
       <ToastContainer />
-      <Navbarcustom/>
-      <div className="login" class="content">
-      <Card className="m-5 d-block " id="card">
-
-        <Col sm="12" md={{ size: 4, offset: 4 }}>
-          <div>
-            <h2 className="login">Login:</h2>
-            <FormGroup>
-              <Input
-                type="email"
-                name="email"
-                value={input.email}
-                onChange={handleInput}
-                placeholder="Enter your email"
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input
-                type="password"
-                name="password"
-                value={input.password}
-                onChange={handleInput}
-                placeholder="Enter password"
-              />
-            </FormGroup>
-            <Button color="primary" onClick={(e) => handleSubmitEvent(e)}>
-              Login
-            </Button>
-            <h6>
-              Click <Link to="/registration">Here</Link> to sign up
-            </h6>
-          </div>
-        </Col>
-
-      </Card>
+      <Navbarcustom />
+      <div className="content login">
+        <Card className="m-5 d-block" id="card">
+          <Col sm="8" md={{ size: 4, offset: 4 }}>
+            <div>
+              <h2 className="login">Login:</h2>
+              <FormGroup>
+                <Input
+                  type="email"
+                  name="email"
+                  value={input.email}
+                  onChange={handleInput}
+                  placeholder="Enter your email"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Input
+                  type="password"
+                  name="password"
+                  value={input.password}
+                  onChange={handleInput}
+                  placeholder="Enter password"
+                />
+              </FormGroup>
+              <Button color="primary" onClick={handleSubmitEvent}>
+                Login
+              </Button>
+              <h6>
+                Click <Link to="/registration">Here</Link> to sign up
+              </h6>
+            </div>
+          </Col>
+        </Card>
       </div>
     </Container>
   );

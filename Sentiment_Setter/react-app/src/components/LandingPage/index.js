@@ -1,29 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbarcustom from "../navbar";
-import JsonData from "../data/data.json";
+
 import { useState, useEffect } from "react";
-//import img from "D:/roba_da_backup/1_UNICA/2_Magistrale/Reading_course2/Sentiment_Setter/react-app/src/img/about.jpg";
-//import about from "../img/about.jpg";
 
 import { Carousel } from 'primereact/carousel';
 import { Divider } from 'primereact/divider';
 import 'primereact/resources/themes/saga-blue/theme.css';  // Theme CSS
 import 'primereact/resources/primereact.min.css';          // PrimeReact CSS
 import 'primeicons/primeicons.css';  
-
-
-
-//import   image1  from "../public/landing.jpg";
-//import   image2  from "../img/landing.jpg";
-//import   image3  from "../img/landing.jpg";       
+       
 
 const LandingPage = () => {
-    const [landingPageData, setLandingPageData] = useState({});
-    useEffect(() => {
-      setLandingPageData(JsonData);
-    }, []);
-    const props = { data: landingPageData };
+    
     
     //const { username } = userData();
 
@@ -59,7 +48,7 @@ const LandingPage = () => {
         return (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1rem' }}>
             <div style={{ marginTop: '1rem' }}>
-                <img src={item.image} alt={item.title} style={{ width: 'auto', height: '500px', borderRadius: '0.5rem' }} />
+                <img src={item.image} alt={item.title} style={{ width: 'auto', height: '30em', borderRadius: '0.5rem' }} />
               <h3 style={{ margin: '0', fontSize: '1.5rem' }}>{item.title}</h3>
               <p style={{ margin: '0.5rem 0 0', fontSize: '1rem' }}>{item.description}</p>
             </div>

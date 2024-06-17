@@ -8,7 +8,7 @@ import {Form,Button} from 'react-bootstrap';
 import { waitFor } from "@testing-library/react";
 import { ToastContainer,toast } from "react-toastify";
 
-const initialUser = { email: "", password: "", username: "", lista_bias: "" };
+const initialUser = { email: "", password: "", username: "", lista_bias: [] };
 const Registration = () => {
   const [user, setUser] = useState(initialUser);
   const [validated, setValidated] = useState(false);
@@ -47,14 +47,23 @@ const Registration = () => {
     }
   };
 
-  const handleUserChange = ({ target }) => {
-    const { name, value } = target;
+  const handleUserChange = (e) => {
+    console.log(e.target);
+    let { name, value } = e.target;
+    if(name==="lista_bias"){
+      const elementsArray = value.split(';').map(element => element.trim());
+      
+      //value=JSON.stringify(elementsArray.filter(element => element !== ""));
+      value=elementsArray;
+      console.log(value);
+      
+    }
     setUser((currentUser) => ({
       ...currentUser,
       [name]: value,
     }));
   };
-
+ 
   return (
     <div>
       <div>
@@ -99,7 +108,7 @@ const Registration = () => {
                     <Form.Text id="avvertimento" muted>
                       Insert values separated by ";".
                     </Form.Text>
-                    <Form.Control as="textarea" rows={3} value={user.lista_bias} onChange={handleUserChange} name="lista_bias" spellCheck="false" />
+                    <Form.Control as="textarea" rows={3} defaultValue={JSON.stringify(user.lista_bias)} onChange={handleUserChange} name="lista_bias" spellCheck="false" />
                   </Form.Group>
                   <Button variant="primary" type="submit">Sign Up</Button>
             </Form> 

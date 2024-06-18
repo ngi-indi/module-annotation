@@ -61,7 +61,7 @@ This project is built with Strapi. Follow these instructions to set it up locall
 
 ### Strapi admin credentials
 
- username:  admin
+ username:  admin@test.com
 
  password:  123456Ab 
 

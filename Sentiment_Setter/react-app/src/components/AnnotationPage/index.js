@@ -38,7 +38,7 @@ const AnnotationPage = () => {
   const user =JSON.parse(auth.user) ;
 
   const options = [
-    { value: 'si', label: 'Sì' },
+    { value: 'yes', label: 'Yes' },
     { value: 'no', label: 'No' }
   ]
 
@@ -180,14 +180,14 @@ const AnnotationPage = () => {
 
 
   
-
+// habdle the cancel button
 const handleCancel = async () => { 
   setSelectedValues([]);
   navigate("/dashboard");    
   };
   
   
-
+  //-----------------------------Dropdown----------------------------------
   const onDropdownChange = (e, rowData) => {
     const arrayOfObjects = [...selectedValues];
     arrayOfObjects.push({id: rowData.id,value: e.value});
@@ -207,6 +207,7 @@ const handleCancel = async () => {
     );
   };
 
+  //-----------------------------Tooltip----------------------------------
 const tooltipTemplate = (rowData) => {
   if (BiasOptions.some(e => e.case === rowData.lista_bias)) {
     
@@ -243,7 +244,7 @@ const tooltipTemplate = (rowData) => {
       </div>
     );
   };
-  
+  // handle the save button
   const handleSave = async () => {
     try {
       const response = await axios.put(`http://localhost:1337/api/frasi-da-classificares/update-json-frasi`, 

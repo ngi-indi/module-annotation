@@ -139,7 +139,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
                   <Form.Group className="mb-3" controlId="password" >
                     <Form.Label>New Password</Form.Label>
-                    <Form.Control type="email" placeholder="la tua vecchia psw" />
+                    <Form.Control type="email" placeholder="" />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="password" >

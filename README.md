@@ -8,7 +8,7 @@
   ![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen.svg)
     
   <p>
-    <strong>Review Platform</strong> is an interactive and intuitive system that allows <strong>reviewers</strong> to log in and examine <strong>sentences</strong> to identify and label the presence of <strong>biases</strong>. Reviewers can assess various forms of bias, such as <strong>gender bias</strong>, <strong>racial bias</strong>, and <strong>hate speech</strong>, using a straightforward and efficient interface. The platform facilitates manual bias detection by providing reviewers with sentences from diverse textual datasets and enabling them to mark sentences for further analysis.
+    <strong>Review Platform</strong> is an interactive and intuitive system that allows <strong>reviewers</strong> to log in and examine <strong>sentences</strong> to identify and label the presence of <strong>biases</strong>. Reviewers can assess various forms of bias, such as <strong>gender bias</strong>, <strong>racial bias</strong>, and <strong>hate speech</strong>, using a straightforward and efficient interface. The platform facilitates manual bias detection by providing reviewers with sentences from diverse textual datasets and enabling them to mark sentences.
   </p>
 </div>
 

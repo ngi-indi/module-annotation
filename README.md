@@ -39,39 +39,39 @@ Before starting, ensure you have Docker and Git installed on your system.
     cd module-annotation
     ```
 
-2. Build the Review Frontend Docker image:
+2. **Build the Review Frontend Docker image**:
 
 ```bash
 docker build -t reviewfrontend .
 ```
 
-3. Run the Review Frontend container:
+3. **Run the Review Frontend container**:
 
 ```bash
 docker run -d --name reviewfrontend --network indi_network -p 3000:3000 reviewfrontend
 ```
 
-4. Build the MySQL Docker image:
+4. **Build the MySQL Docker image**:
 
 ```bash
 cd ../db
 docker build -t reviewdb .
 ```
 
-5. Run the Review Database container:
+5. **Run the Review Database container**:
 
 ```bash
 docker run -d --name reviewdb --network indi_network -p 3306:3306 reviewdb
 ```
 
-6. Build the Review Backend Docker image:
+6. **Build the Review Backend Docker image**:
 
 ```bash
 cd ../backend
 docker build -t reviewbackend .
 ```
 
-7. Run the Review Backend container:
+7. **Run the Review Backend container**:
 
 ```bash
 docker run -d --name reviewbackend --network indi_network -p 1337:1337 reviewbackend

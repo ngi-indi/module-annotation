@@ -83,7 +83,7 @@ docker run -d --name reviewbackend --network indi_network -p 1337:1337 reviewbac
 
 8. **Access the Frontend interface:**
 
-    Open [http://localhost:1337/admin](http://localhost:3000).
+    Open [http://localhost:3000](http://localhost:3000).
 
 ## Usage
 

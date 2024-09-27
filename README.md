@@ -39,59 +39,64 @@ This project is built with Strapi. Follow these instructions to set it up locall
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/ngi-indi/module-bias-manager.git
-    cd module-bias-manager
+    git clone https://github.com/ngi-indi/module-annotation.git
+    cd module-annotation
     ```
 
-2. **Install dependencies:**
-    This step must be performed in both the `sentiment_setter` and `react-app` folders.
+### Step 4: Set Up the Frontend Module
 
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+1. Clone the **Annotation** repository:
 
-3. **Set up the database (MySQL):**
+```bash
+git clone https://github.com/ngi-indi/module-annotation  
+cd ../module-annotation/frontend
+```
 
-    - Create a new database.
-    - Import the provided database backup (`db_dati.zip`).
-  
-4. **Configure environment variables:**
+2. Build the Review Frontend Docker image:
 
-    Create a `.env` file in the root of the project and configure your database connection settings:
+```bash
+docker build -t reviewfrontend .
+```
 
-    ```env
-    DATABASE_CLIENT=mysql
-    DATABASE_HOST=your_host
-    DATABASE_PORT=your_port
-    DATABASE_NAME=your_database
-    DATABASE_USERNAME=your_username
-    DATABASE_PASSWORD=your_password
-    DATABASE_SSL=false
-    ```
+3. Run the Review Frontend container:
 
-5. **Start the Strapi server:**
+```bash
+docker run -d --name reviewfrontend --network indi_network -p 3000:3000 reviewfrontend
+```
 
-    Open a terminal in the `sentiment_setter` folder and run:
+4. Build the MySQL Docker image:
 
-    ```bash
-    npm run develop
-    # or
-    yarn develop
-    ```
+```bash
+cd ../db
+docker build -t reviewdb .
+```
 
-6. **Start the React app:**
+5. Run the Review Database container:
 
-    Open a terminal in the `react-app` folder and run:
+```bash
+docker run -d --name reviewdb --network indi_network -p 3306:3306 reviewdb
+```
 
-    ```bash
-    npm start
-    ```
+6. Build the Review Backend Docker image:
 
-7. **Access the Strapi admin panel:**
+```bash
+cd ../backend
+docker build -t reviewbackend .
+```
 
-    Open [http://localhost:1337/admin](http://localhost:1337/admin) in your browser and set up your admin user.
+7. Run the Review Backend container:
+
+```bash
+docker run -d --name reviewbackend --network indi_network -p 1337:1337 reviewbackend
+```
+
+8. **Access the Strapi admin panel:**
+
+    Open [http://localhost:1337/admin](http://localhost:1337/admin).
+
+8. **Access the Frontend interface:**
+
+    Open [http://localhost:1337/admin](http://localhost:3000).
 
 ---
 
@@ -103,7 +108,7 @@ This project is built with Strapi. Follow these instructions to set it up locall
 - **Username**: `admin@test.com`
 - **Password**: `123456Ab`
 
-#### Site credentials:
+#### Frontend credentials:
 - **Administrator**:
   - **Username**: `s@d.vom`
   - **Password**: `123456`
@@ -145,10 +150,11 @@ This project is built with Strapi. Follow these instructions to set it up locall
 - Ensure that your PR references any relevant issues.
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the GNU General Public License v3.0 License - see the [LICENSE](https://github.com/ngi-indi/module-annotation/blob/main/LICENSE) file for details.
 
 ## Contact
 For any questions or support, please reach out to:
-- Email: support@ngi-indi.com
-- Website: NGI Search INDI
+- University of Cagliari: bart@unica.it, diego.reforgiato@unica.it, ludovico.boratto@unica.it, mirko.marras@unica.it
+- R2M Solution: giuseppe.scarpi@r2msolution.com
+- Website: Coming soon!
 

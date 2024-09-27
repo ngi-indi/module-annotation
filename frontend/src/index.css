@@ -1,0 +1,404 @@
+
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%!important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Home */
+.home {
+  display: flex;
+  margin-top: 30px;
+}
+
+/* End home */
+
+/* Loginalign-self: center; */
+#card {
+  width: 100%;
+  border: none;
+}
+
+.login {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+  width: 80%;
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.btn.btn-primary {
+  background: #BD2B26 !important;
+  border: none!important;
+}
+
+.login h6 {
+  margin-top: 15px;
+}
+
+.login h2 {
+  text-align: center;
+}
+
+.login Row{
+  margin: 10px;
+  width: auto;
+  padding: auto;
+}
+
+/* End Login */
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.custom-nav .collapse {
+  justify-content: flex-end;
+}
+/* End Nav */
+
+.landing {
+  width: 100% !important;
+  flex-direction: column;
+  margin-top: 56px;
+
+
+}
+
+html{
+  scroll-behavior: smooth;;
+}
+/* Header Section */
+.intro {
+  box-sizing: border-box!important;
+  display: table;
+  width: 100% !important;
+  background: url(../public/landing.jpg) center center no-repeat;
+  background-color: #e5e5e5;
+  -webkit-background-size: cover!important;
+  -moz-background-size: cover!important;
+  background-size: cover!important;
+  -o-background-size: cover!important;
+
+}
+.intro .overlay {
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.2);
+
+}
+.intro h1 {
+  font-family: "Raleway", sans-serif;
+  color: #fff;
+  text-align: center;
+  font-size: 82px;
+  font-weight: 700;
+  text-transform: uppercase;
+
+}
+.intro h1 span {
+  font-weight: 800;
+  color: #5ca9fb;
+}
+.intro p {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 30px;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}
+header .intro-text {
+  box-sizing: border-box;
+  margin-top: 350px;
+  margin-bottom: 200px;
+  text-align: center;
+
+}
+#header {
+  left: 0;
+  right: 0;
+
+}
+#id {
+  background-color:aqua;
+}
+
+/**/
+.rag-red {
+  width: 100%;
+  height: 100%;
+  background-color: #f0111144;
+}
+.rag-green {
+  width: 100%;
+  height: 100%;
+  background-color: #1ddc1044;
+}
+.rag-yellow{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 148, 17, 0.719);
+}
+
+.carousel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+.carousel-content {
+  margin-top: 1rem;
+}
+
+.carousel-content h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.carousel-content p {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
+/* General Styles */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background-color: #0e2b59;
+  color: white;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-offer {
+  margin-right: 20px;
+}
+
+.shop-now-btn {
+  background-color: #ff6600;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.shop-now-btn:hover {
+  background-color: #ff4500;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+  width: 80%;
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.text-container {
+  width: 50%;
+}
+
+.card{
+  border: none !important;
+  width: 100%;
+}
+
+.snippet {
+  width: 50%;
+}
+
+.cardparent {
+  width: 100%;
+  margin: 0 -15% 0 13%;
+}
+
+.register.row {
+    width: 100%;
+    margin: 3rem !important;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.profile.row {
+    margin-top: 20px;
+}
+
+.card.content {
+    border: none !important;
+}
+
+.card-header {
+    text-align: center;
+    background: none !important;
+    border: none !important;
+    margin-top: 20px;
+}
+
+.card-parent {
+  width: 100%;
+  margin-left: 20%;
+ }
+
+.card.p-datatable.p-component.p-datatable-responsive-scroll.p-datatable-striped.p-datatable-gridlines {
+  border:none;
+}
+
+button.mt-2.btn.btn-secondary {
+    background: #BD2B26 !important;
+    border: none !important;
+    margin-left: 15%;
+}
+
+ul.p-dropdown-items {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+    width: 80%;
+    margin-right: 20%;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.container {
+  max-width: none!important;
+  margin: 0 10%!important;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #BD2B26;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.rating {
+  font-size: 1.2rem;
+  color: #ff6600;
+}
+
+.rating-score {
+  margin-left: 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.cta-btn {
+  background-color: #BD2B26;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  background-color: #ff4500;
+}
+
+.hero-info {
+  margin-top: 10px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Image Container */
+.image-container img {
+  width: 400px;
+  border-radius: 10px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.button-red {
+  background: #BD2B26!important;
+}
+
+span.badge.rounded-pill.bg-primary {
+  background-color: rgb(16, 41, 63) !important;
+}
+
+.footer p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.logos img {
+  margin: 10px;
+  height: 50px;
+}
+
+.navbar.bg-primary {
+  background: #BD2B26!important;
+}
+
+.nav-link {
+  color: white!important;
+}

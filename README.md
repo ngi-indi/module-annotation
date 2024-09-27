@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.jpg" alt="Logo" width="150"/>
+  <img src="./assets/logo.png" alt="Logo" width="150"/>
 
   # Annotation Platform
 
@@ -8,7 +8,7 @@
   ![Status: Stable](https://img.shields.io/badge/status-stable-brightgreen.svg)
     
   <p>
-    <strong>Review Platform</strong> is an interactive and intuitive system that allows <strong>reviewers</strong> to log in and examine <strong>sentences</strong> to identify and label the presence of <strong>biases</strong>. Reviewers can assess various forms of bias, such as <strong>gender bias</strong>, <strong>racial bias</strong>, and <strong>hate speech</strong>, using a straightforward and efficient interface. The platform facilitates manual bias detection by providing reviewers with sentences from diverse textual datasets and enabling them to mark sentences.
+    <strong>Review Platform</strong> is an interactive and intuitive system that allows <strong>reviewers</strong> to log in and examine <strong>sentences</strong> to identify and label the presence of <strong>biases</strong>. Reviewers can assess various forms of bias, such as <strong>gender bias</strong>, <strong>racial bias</strong>, and <strong>hate speech</strong>, using a straightforward and efficient interface. 
   </p>
 </div>
 
@@ -22,17 +22,13 @@
 - [License](#license)
 - [Contact](#contact)
 
----
-
 ## Installation
 
 This project is built with Strapi. Follow these instructions to set it up locally and use the same data.
 
 ### Prerequisites
 
-- **Node.js**
-- **npm** or **yarn**
-- **MySQL**
+Before starting, ensure you have Docker and Git installed on your system.
 
 ### Setup
 
@@ -42,15 +38,6 @@ This project is built with Strapi. Follow these instructions to set it up locall
     git clone https://github.com/ngi-indi/module-annotation.git
     cd module-annotation
     ```
-
-### Step 4: Set Up the Frontend Module
-
-1. Clone the **Annotation** repository:
-
-```bash
-git clone https://github.com/ngi-indi/module-annotation  
-cd ../module-annotation/frontend
-```
 
 2. Build the Review Frontend Docker image:
 
@@ -98,17 +85,13 @@ docker run -d --name reviewbackend --network indi_network -p 1337:1337 reviewbac
 
     Open [http://localhost:1337/admin](http://localhost:3000).
 
----
-
 ## Usage
 
-### Test Credentials
-
-#### Strapi admin credentials:
+### Backend admin credentials:
 - **Username**: `admin@test.com`
 - **Password**: `123456Ab`
 
-#### Frontend credentials:
+### Frontend credentials:
 - **Administrator**:
   - **Username**: `s@d.vom`
   - **Password**: `123456`
@@ -116,8 +99,6 @@ docker run -d --name reviewbackend --network indi_network -p 1337:1337 reviewbac
 - **Reviewer**:
   - **Username**: `utente1@prova.com`
   - **Password**: `123456`
-
----
 
 ## Contributing
 
